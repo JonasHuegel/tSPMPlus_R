@@ -8,7 +8,7 @@
 using namespace Rcpp;
 // [[Rcpp::export]]
 size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::string outputDir, 
-                              std::string outputFilesDescription, int numOfThreads){
+                              std::string outputFilePrefix, int numOfThreads){
   Rcout <<"Preparing data!\n";
   size_t numOfEntries = df_dbMart.nrows();
   Rcout<<"numOfEntries: " << numOfEntries <<"\n";
@@ -43,13 +43,80 @@ size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::
                                                            startPositions,
                                                            numOfEntries,
                                                            outputDir,
-                                                           outputFilesDescription,
+                                                           outputFilePrefix,
                                                            7,
                                                            numOfThreads);
   free(dbMart);
   Rcout<< "Created " << numOfCreatedSequences << " sequences.\n";
   return numOfCreatedSequences;
   //return 0;
+}
+
+// [[Rcpp::export]]
+DataFrame extractSequencesFromDataFrameAndReturnSparseOnes(DataFrame df_dbMart,size_t numOfPatients, std::string outputDir, 
+                                                           std::string outputFilePrefix, double sparsityValue, int numOfThreads){
+  
+  size_t numOfSequences = createTransitiveSequences(df_dbMart,numOfPatients, outputDir, 
+                                                    outputFilePrefix, numOfThreads);
+  Rcout << "removing sparse sequences \n";
+  
+  std::map<long, size_t> sequences = summarizeSequences(numOfPatients, false, outputDir,outputFilePrefix);
+  size_t sparsityThreshold = numOfPatients * sparsityValue;
+  std::cout << "sparsity = " << sparsityValue << " --> sparsity threshold: " << sparsityThreshold <<std::endl;
+  for(auto it = sequences.begin(); it != sequences.end();){
+    if(it->second < sparsityThreshold){
+      it = sequences.erase(it);
+    } else{
+      ++it;
+    }
+  }
+  size_t numOfUniqueSequences = sequences.size();
+  Rcout << "unique sequences: " << numOfUniqueSequences <<std::endl;
+
+  size_t numOfEntries = df_dbMart.nrows();
+  size_t startPositions[numOfPatients];
+  IntegerVector patientIds = df_dbMart[0];
+  IntegerVector phenxIds = df_dbMart[1];
+  DateVector startDates = df_dbMart[2];
+  std::cout << "try to alloc " <<(sizeof(dbMartEntry) * numOfEntries)/ (1024 *1024) << " MB\n";
+  dbMartEntry* dbMart = (dbMartEntry *) malloc(sizeof(dbMartEntry) * numOfEntries);
+  if(dbMart == nullptr){
+    Rcout << "Error! could not allocate memory for dbmart \n";
+    Rcout.flush();
+    return 21;
+  }
+  startPositions[0] = 0;
+  for(size_t i = 0; i < numOfEntries; ++i){
+    dbMart[i].patID = patientIds[i];
+    dbMart[i].phenID = phenxIds[i];
+    dbMart[i].date = getTimeFromString(((Date)startDates[i]).format().c_str());;
+    
+    if(i>0 && dbMart[i].patID != dbMart[i-1].patID){
+      startPositions[dbMart[i].patID] = i; 
+    }
+  }
+  std::vector<temporalSequence> sparseSequences = createSparseTemporalSequences(dbMart,
+                                                                                numOfPatients,
+                                                                                startPositions,
+                                                                                numOfEntries,
+                                                                                sequences,
+                                                                                numOfThreads);
+  Rcout << "created " << sparseSequences.size() << "transitive sequences!\n";
+  
+  Rcout << "transform sequences from c++ structure in R DataFrame!\n";                                                                      
+  std::vector<unsigned long> seqIDs;
+  seqIDs.reserve(sparseSequences.size());
+  std::vector<int> patIDs;
+  patIDs.reserve(sparseSequences.size());
+  
+  for(temporalSequence seq: sparseSequences){
+    int patId = seq.patientID;
+    long seqId = seq.seqID;
+    patIDs.emplace_back(patId);
+    seqIDs.emplace_back(seqId);
+  }
+  DataFrame sequenceDataFrame = DataFrame::create(Named("patient_num") = patIDs, Named("sequence") = seqIDs);
+  return sequenceDataFrame;
 }
 
 

@@ -11,17 +11,33 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // createTransitiveSequences
-size_t createTransitiveSequences(DataFrame df_dbMart, size_t numOfPatients, std::string outputDir, std::string outputFilesDescription, int numOfThreads);
-RcppExport SEXP _tSPMPlusR_createTransitiveSequences(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilesDescriptionSEXP, SEXP numOfThreadsSEXP) {
+size_t createTransitiveSequences(DataFrame df_dbMart, size_t numOfPatients, std::string outputDir, std::string outputFilePrefix, int numOfThreads);
+RcppExport SEXP _tSPMPlusR_createTransitiveSequences(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type df_dbMart(df_dbMartSEXP);
     Rcpp::traits::input_parameter< size_t >::type numOfPatients(numOfPatientsSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
-    Rcpp::traits::input_parameter< std::string >::type outputFilesDescription(outputFilesDescriptionSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
     Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(createTransitiveSequences(df_dbMart, numOfPatients, outputDir, outputFilesDescription, numOfThreads));
+    rcpp_result_gen = Rcpp::wrap(createTransitiveSequences(df_dbMart, numOfPatients, outputDir, outputFilePrefix, numOfThreads));
+    return rcpp_result_gen;
+END_RCPP
+}
+// extractSequencesFromDataFrameAndReturnSparseOnes
+DataFrame extractSequencesFromDataFrameAndReturnSparseOnes(DataFrame df_dbMart, size_t numOfPatients, std::string outputDir, std::string outputFilePrefix, double sparsityValue, int numOfThreads);
+RcppExport SEXP _tSPMPlusR_extractSequencesFromDataFrameAndReturnSparseOnes(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP sparsityValueSEXP, SEXP numOfThreadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type df_dbMart(df_dbMartSEXP);
+    Rcpp::traits::input_parameter< size_t >::type numOfPatients(numOfPatientsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
+    Rcpp::traits::input_parameter< double >::type sparsityValue(sparsityValueSEXP);
+    Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(extractSequencesFromDataFrameAndReturnSparseOnes(df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -60,6 +76,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlusR_createTransitiveSequences", (DL_FUNC) &_tSPMPlusR_createTransitiveSequences, 5},
+    {"_tSPMPlusR_extractSequencesFromDataFrameAndReturnSparseOnes", (DL_FUNC) &_tSPMPlusR_extractSequencesFromDataFrameAndReturnSparseOnes, 6},
     {"_tSPMPlusR_tSPMPlus", (DL_FUNC) &_tSPMPlusR_tSPMPlus, 12},
     {"_tSPMPlusR_testSequencingworkflow", (DL_FUNC) &_tSPMPlusR_testSequencingworkflow, 0},
     {NULL, NULL, 0}
