@@ -1,0 +1,3 @@
+[submodule "src/tspm_cpp_backend"]
+	path = src/tspm_cpp_backend
+	url = git@github.com:JonasHuegel/tspm_cpp_backend.git
