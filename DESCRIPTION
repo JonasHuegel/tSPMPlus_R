@@ -1,0 +1,13 @@
+Package: tSPMPlusR
+Type: Package
+Title: transitive Sequence Pattern Mining for EHR records 
+Version: 1.0
+Date: 2023-04-09
+Author: Jonas Hügel
+Maintainer: Your Name <your@email.com>
+Description: R package with C++ backend for fast, low memory consuming creation
+  for transitive sequences. The package provides additional functionality to add the
+  temportal lenght of the sequences.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.10)
+LinkingTo: Rcpp
