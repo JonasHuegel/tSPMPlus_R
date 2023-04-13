@@ -3,7 +3,7 @@ Type: Package
 Title: transitive Sequence Pattern Mining for EHR records 
 Version: 1.0
 Date: 2023-04-09
-Author: Jonas Hügel
+Author: Jonas Huegel
 Maintainer: Your Name <your@email.com>
 Description: R package with C++ backend for fast, low memory consuming creation
   for transitive sequences. The package provides additional functionality to add the

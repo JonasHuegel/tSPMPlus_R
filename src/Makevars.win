@@ -1,7 +1,8 @@
 CXX_STD = CXX17
 PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -v  \
-  -lpthread -fopenmp-simd -latomic -fopenmp
+  -lpthread -lstdc++fs -latomic -fopenmp
 PKG_LIBS +=  $(SHLIB_OPENMP_CXXFLAGS)
+PKG_CFLAGS = $(SHLIB_OPENMP_CFLAGS)
 
 
 

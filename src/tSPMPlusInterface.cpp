@@ -2,10 +2,14 @@
 #include "tspm_cpp_backend/utils/sequencing.cpp"
 #include "tspm_cpp_backend/utils/utils.cpp"
 #include "tspm_cpp_backend/utils/sorter.cpp"
+#include "tspm_cpp_backend/utils/dbMartEntry.h"
+//#include <stdlib.h>
+//#include <malloc.h>
 
 
 
 using namespace Rcpp;
+
 // [[Rcpp::export]]
 size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::string outputDir, 
                               std::string outputFilePrefix, int numOfThreads){
@@ -17,20 +21,29 @@ size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::
   IntegerVector patientIds = df_dbMart[0];
   IntegerVector phenxIds = df_dbMart[1];
   DateVector startDates = df_dbMart[2];
-  std::cout << "try to alloc " <<(sizeof(dbMartEntry) * numOfEntries)/ (1024 *1024) << " MB\n";
-  dbMartEntry* dbMart = (dbMartEntry *) malloc(sizeof(dbMartEntry) * numOfEntries);
-  if(dbMart == nullptr){
-    Rcout << "Error! could not allocate memory for dbmart \n";
-    Rcout.flush();
-    return 21;
-  }
+  Rcout << "try to alloc " <<(sizeof(dbMartEntry) * numOfEntries)/ (1024 *1024) << " MB\n";
+  //dbMartEntry* dbMart = (dbMartEntry *) malloc(sizeof(dbMartEntry) * numOfEntries);
+  std::vector<dbMartEntry> dbMart;
+  dbMart.reserve(numOfEntries);
+  //if(dbMart == nullptr){
+  //  Rcout << "Error! could not allocate memory for dbmart \n";
+  //  Rcout.flush();
+  //  return 21;
+  //}
   Rcout<< "Allocated memory for DBMart. Filling it from DF and determine start position for each Patient!\n";
   Rcout.flush();
   startPositions[0] = 0;
+  
   for(size_t i = 0; i < numOfEntries; ++i){
-    dbMart[i].patID = patientIds[i];
-    dbMart[i].phenID = phenxIds[i];
-    dbMart[i].date = getTimeFromString(((Date)startDates[i]).format().c_str());;
+    dbMartEntry entry;
+    entry.patID = patientIds[i];
+    entry.phenID = phenxIds[i];
+    entry.date = getTimeFromString(((Date)startDates[i]).format().c_str());
+    dbMart.emplace_back(entry);
+    //dbMart[i].patID = patientIds[i];
+    //dbMart[i].phenID = phenxIds[i];
+    //dbMart[i].date = 0;
+    //dbMart[i].date = getTimeFromString(((Date)startDates[i]).format().c_str());
 
     if(i>0 && dbMart[i].patID != dbMart[i-1].patID){
       startPositions[dbMart[i].patID] = i; 
@@ -38,7 +51,8 @@ size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::
   }
 
   Rcout<< "Creating sequences.\n";
-  size_t numOfCreatedSequences = extractSequencesFromArray(dbMart,
+  Rcout.flush();
+  size_t numOfCreatedSequences = extractSequencesFromArray(dbMart.data(),
                                                            numOfPatients,
                                                            startPositions,
                                                            numOfEntries,
@@ -46,7 +60,7 @@ size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::
                                                            outputFilePrefix,
                                                            7,
                                                            numOfThreads);
-  free(dbMart);
+  //free(dbMart);
   Rcout<< "Created " << numOfCreatedSequences << " sequences.\n";
   return numOfCreatedSequences;
   //return 0;
