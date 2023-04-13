@@ -3,26 +3,25 @@
 \alias{tSPMPlusR}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  transitive Sequence Pattern Mining for EHR records 
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  R package with C++ backend for fast, low memory consuming creation
+  of transitive sequences. The package provides additional functionality to add the temportal lenght of the sequences.
 }
 \details{
   This section should provide a more detailed overview of how to use the
   package, including the most important functions.
 }
 \author{
-Your Name, email optional.
+Jonas Huegel, Hossein Estiri
 
-Maintainer: Your Name <your@email.com>
+Maintainer: jhuegel@mgh.harvard.edu
 }
 \references{
-  This optional section can contain literature or other references for
-  background information.
+  tSPM algorithm:
 }
-\keyword{ package }
+\keyword{ tSPM, MLHO, temporal sequencing }
 \seealso{
   Optional links to other man pages
 }

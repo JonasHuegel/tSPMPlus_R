@@ -1,0 +1,16 @@
+\name{createTransitiveSequences}
+\alias{createTransitiveSequences}
+\docType{package}
+\title{
+create transitive Sequences from EHR
+}
+\description{
+The function extracts sequences from given DBMart and write the sequences into a files.
+\usage{
+tODO	
+}
+\examples{
+\dontrun{
+TODO
+}
+}
