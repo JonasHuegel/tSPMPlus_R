@@ -3,9 +3,11 @@
 #include "tspm_cpp_backend/utils/utils.cpp"
 #include "tspm_cpp_backend/utils/sorter.cpp"
 #include "tspm_cpp_backend/utils/dbMartEntry.h"
-//#include <stdlib.h>
-//#include <malloc.h>
 
+
+#ifdef __INCLUDE_ATOMIC__
+#include "libatomic.c"
+#endif
 
 
 using namespace Rcpp;

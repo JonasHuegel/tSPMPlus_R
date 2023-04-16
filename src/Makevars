@@ -1,5 +1,5 @@
 CXX_STD = CXX17
-PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -D__LINUX__ -v \
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -v \
   -lpthread -latomic
 PKG_LIBS = /usr/lib/libatomic.so
 PKG_CFLAGS = $(SHLIB_OPENMP_CFLAGS)
