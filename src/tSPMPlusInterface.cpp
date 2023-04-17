@@ -6,7 +6,7 @@
 
 
 #ifdef __INCLUDE_ATOMIC__
-#include "libatomic.c"
+#include "tspm_cpp_backend/libatomic/libatomic.c"
 #endif
 
 
