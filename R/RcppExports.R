@@ -5,8 +5,8 @@ createTransitiveSequences <- function(df_dbMart, numOfPatients, outputDir, outpu
     .Call(`_tSPMPlusR_createTransitiveSequences`, df_dbMart, numOfPatients, outputDir, outputFilePrefix, numOfThreads)
 }
 
-extractSequencesFromDataFrameAndReturnSparseOnes <- function(df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads) {
-    .Call(`_tSPMPlusR_extractSequencesFromDataFrameAndReturnSparseOnes`, df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads)
+extractNonSparseSequences <- function(df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
+    .Call(`_tSPMPlusR_extractNonSparseSequences`, df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration, durationInWeeks, durationInMonths)
 }
 
 tSPMPlus <- function(numOfThreads, dbMartCsv, inputFileDelimiter, outputDir, outputFilesDescription, patIDColumn, phenxColumn, dateColumn, patientCount, createDuration, removeSparseBuckets, sparsity) {

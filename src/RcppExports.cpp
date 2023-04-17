@@ -25,9 +25,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// extractSequencesFromDataFrameAndReturnSparseOnes
-DataFrame extractSequencesFromDataFrameAndReturnSparseOnes(DataFrame df_dbMart, size_t numOfPatients, std::string outputDir, std::string outputFilePrefix, double sparsityValue, int numOfThreads);
-RcppExport SEXP _tSPMPlusR_extractSequencesFromDataFrameAndReturnSparseOnes(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP sparsityValueSEXP, SEXP numOfThreadsSEXP) {
+// extractNonSparseSequences
+DataFrame extractNonSparseSequences(DataFrame df_dbMart, size_t numOfPatients, std::string outputDir, std::string outputFilePrefix, double sparsityValue, int numOfThreads, bool addDuration, bool durationInWeeks, bool durationInMonths);
+RcppExport SEXP _tSPMPlusR_extractNonSparseSequences(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP sparsityValueSEXP, SEXP numOfThreadsSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -37,7 +37,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
     Rcpp::traits::input_parameter< double >::type sparsityValue(sparsityValueSEXP);
     Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(extractSequencesFromDataFrameAndReturnSparseOnes(df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads));
+    Rcpp::traits::input_parameter< bool >::type addDuration(addDurationSEXP);
+    Rcpp::traits::input_parameter< bool >::type durationInWeeks(durationInWeeksSEXP);
+    Rcpp::traits::input_parameter< bool >::type durationInMonths(durationInMonthsSEXP);
+    rcpp_result_gen = Rcpp::wrap(extractNonSparseSequences(df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration, durationInWeeks, durationInMonths));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -76,7 +79,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlusR_createTransitiveSequences", (DL_FUNC) &_tSPMPlusR_createTransitiveSequences, 5},
-    {"_tSPMPlusR_extractSequencesFromDataFrameAndReturnSparseOnes", (DL_FUNC) &_tSPMPlusR_extractSequencesFromDataFrameAndReturnSparseOnes, 6},
+    {"_tSPMPlusR_extractNonSparseSequences", (DL_FUNC) &_tSPMPlusR_extractNonSparseSequences, 9},
     {"_tSPMPlusR_tSPMPlus", (DL_FUNC) &_tSPMPlusR_tSPMPlus, 12},
     {"_tSPMPlusR_testSequencingworkflow", (DL_FUNC) &_tSPMPlusR_testSequencingworkflow, 0},
     {NULL, NULL, 0}
