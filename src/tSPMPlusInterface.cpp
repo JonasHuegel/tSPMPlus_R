@@ -1,3 +1,4 @@
+
 #include <Rcpp.h>
 #include "tspm_cpp_backend/utils/sequencing.cpp"
 #include "tspm_cpp_backend/utils/utils.cpp"
@@ -5,9 +6,6 @@
 #include "tspm_cpp_backend/utils/dbMartEntry.h"
 
 
-#ifdef __INCLUDE_ATOMIC__
-#include "tspm_cpp_backend/libatomic/libatomic.c"
-#endif
 
 
 using namespace Rcpp;
