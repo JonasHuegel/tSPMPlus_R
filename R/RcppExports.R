@@ -5,15 +5,15 @@ createTransitiveSequences <- function(df_dbMart, numOfPatients, outputDir, outpu
     .Call(`_tSPMPlusR_createTransitiveSequences`, df_dbMart, numOfPatients, outputDir, outputFilePrefix, numOfThreads)
 }
 
-extractNonSparseSequences <- function(df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
-    .Call(`_tSPMPlusR_extractNonSparseSequences`, df_dbMart, numOfPatients, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration, durationInWeeks, durationInMonths)
+tSPMPlus <- function(df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
+    .Call(`_tSPMPlusR_tSPMPlus`, df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, removeSparseTemporalBuckets, patIdLength, addDuration, durationInWeeks, durationInMonths)
 }
 
-tSPMPlus <- function(numOfThreads, dbMartCsv, inputFileDelimiter, outputDir, outputFilesDescription, patIDColumn, phenxColumn, dateColumn, patientCount, createDuration, removeSparseBuckets, sparsity) {
-    .Call(`_tSPMPlusR_tSPMPlus`, numOfThreads, dbMartCsv, inputFileDelimiter, outputDir, outputFilesDescription, patIDColumn, phenxColumn, dateColumn, patientCount, createDuration, removeSparseBuckets, sparsity)
+extractNonSparseSequences <- function(df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
+    .Call(`_tSPMPlusR_extractNonSparseSequences`, df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration, durationInWeeks, durationInMonths)
 }
 
-testSequencingworkflow <- function() {
-    .Call(`_tSPMPlusR_testSequencingworkflow`)
+extractAllTransiviteSequences <- function(df_dbMart, outputDir, outputFilePrefix, numOfThreads, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
+    .Call(`_tSPMPlusR_extractAllTransiviteSequences`, df_dbMart, outputDir, outputFilePrefix, numOfThreads, addDuration, durationInWeeks, durationInMonths)
 }
 
