@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // createTransitiveSequences
 size_t createTransitiveSequences(DataFrame df_dbMart, size_t numOfPatients, std::string& outputDir, std::string& outputFilePrefix, int numOfThreads);
-RcppExport SEXP _tSPMPlusR_createTransitiveSequences(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP) {
+RcppExport SEXP _tSPMPlus_createTransitiveSequences(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -27,7 +27,7 @@ END_RCPP
 }
 // tSPMPlus
 DataFrame tSPMPlus(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool removeSparseTemporalBuckets, int patIdLength, bool addDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlusR_tSPMPlus(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+RcppExport SEXP _tSPMPlus_tSPMPlus(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,7 +49,7 @@ END_RCPP
 }
 // extractNonSparseSequences
 DataFrame extractNonSparseSequences(DataFrame df_dbMart, std::string outputDir, std::string outputFilePrefix, double sparsityValue, int numOfThreads, bool addDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlusR_extractNonSparseSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP sparsityValueSEXP, SEXP numOfThreadsSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+RcppExport SEXP _tSPMPlus_extractNonSparseSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP sparsityValueSEXP, SEXP numOfThreadsSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -67,7 +67,7 @@ END_RCPP
 }
 // extractAllTransiviteSequences
 DataFrame extractAllTransiviteSequences(DataFrame df_dbMart, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool addDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlusR_extractAllTransiviteSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+RcppExport SEXP _tSPMPlus_extractAllTransiviteSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -84,14 +84,14 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tSPMPlusR_createTransitiveSequences", (DL_FUNC) &_tSPMPlusR_createTransitiveSequences, 5},
-    {"_tSPMPlusR_tSPMPlus", (DL_FUNC) &_tSPMPlusR_tSPMPlus, 12},
-    {"_tSPMPlusR_extractNonSparseSequences", (DL_FUNC) &_tSPMPlusR_extractNonSparseSequences, 8},
-    {"_tSPMPlusR_extractAllTransiviteSequences", (DL_FUNC) &_tSPMPlusR_extractAllTransiviteSequences, 7},
+    {"_tSPMPlus_createTransitiveSequences", (DL_FUNC) &_tSPMPlus_createTransitiveSequences, 5},
+    {"_tSPMPlus_tSPMPlus", (DL_FUNC) &_tSPMPlus_tSPMPlus, 12},
+    {"_tSPMPlus_extractNonSparseSequences", (DL_FUNC) &_tSPMPlus_extractNonSparseSequences, 8},
+    {"_tSPMPlus_extractAllTransiviteSequences", (DL_FUNC) &_tSPMPlus_extractAllTransiviteSequences, 7},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_tSPMPlusR(DllInfo *dll) {
+RcppExport void R_init_tSPMPlus(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

@@ -1,4 +1,4 @@
-useDynLib(tSPMPlusR, .registration=TRUE)
+useDynLib(tSPMPlus, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 exportPattern("^[[:alpha:]]+")
 import(data.table)

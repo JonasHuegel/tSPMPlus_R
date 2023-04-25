@@ -1,4 +1,4 @@
-Package: tSPMPlusR
+Package: tSPMPlus
 Type: Package
 Title: transitive Sequence Pattern Mining for EHR records 
 Version: 0.3.1
