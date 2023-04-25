@@ -6,11 +6,12 @@ create transitive Sequences from EHR
 }
 \description{
 The function extracts sequences from given DBMart and write the sequences into a files.
+}
 \usage{
-tODO	
+createTransitiveSequences()	
 }
 \examples{
 \dontrun{
-TODO
+createTransitiveSequences()
 }
 }
