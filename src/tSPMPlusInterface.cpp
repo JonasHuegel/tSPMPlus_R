@@ -43,7 +43,7 @@ size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::
   Rcout <<"determine start positions!\n";
   Rcout.flush();
   std::vector<size_t> startPositions = extractStartPositions(dbMart);
-  Rcout<< "Creating sequences.\n";
+  Rcout<< "Creating sequences!\n";
   Rcout.flush();
 
   size_t numOfCreatedSequences = extractSequencesFromArray(dbMart,
@@ -78,7 +78,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   Rcout <<"Preparing data!\n";
   Rcout.flush();
   std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
-  Rcout <<"data prepared!\n";
+  Rcout <<"Data prepared!\n";
   Rcout.flush();
   std::vector<temporalSequence> sequences =  sequenceWorkflow(dbMart,
                                                               outputDir,
@@ -91,7 +91,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
                                                               removeSparseTemporalBuckets,
                                                               patIdLength,
                                                               numOfThreads);
-  Rcout << "created " << sequences.size() << "transitive sequences!\n";
+  Rcout << "created " << sequences.size() << " transitive sequences!\n";
   
   Rcout << "transform sequences from c++ structure in R DataFrame!\n";                                                                      
   std::vector<unsigned long> seqIDs;
