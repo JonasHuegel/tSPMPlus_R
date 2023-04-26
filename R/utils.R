@@ -1,3 +1,9 @@
+#' Transforms an alphanumeric data frame to a numeric one
+#'
+#'@description Transforms an alphanumeric data frame to a numeric one and returns it together with the look up tables for the patient id and phenx 
+#'@param dbmart the alpha numeric dnmart that should be converted
+#'@returns a list of data frames containing the numeric datamart and the patient id and phenx look up tables
+#'
 transformDbMartToNumeric<- function(dbmart){
   require(dplyr)
   require(tidyr)
