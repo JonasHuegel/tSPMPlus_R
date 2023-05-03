@@ -68,7 +68,7 @@ To create the transitive sequences we need only the dbmart data frame. The other
 
 ```{r transform to numeric, warning=FALSE}
 dbMart <- tSPMPlus::transformDbMartToNumeric(dbMart.alpha)
-dbMart$dbMart <- dbMart$dbMart %>% subset(num_pat_num < 500)
+dbMart$dbMart <- dbMart$dbMart %>% subset(num_pat_num < 400)
 # dbMart contains a list of 3 Elements, the numeric dbMart,
 # the patient ID look-up table and the phenx look-up table
 head(dbMart$dbMart)

@@ -66,6 +66,8 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
              bool removeSparseSequences = true,
              double sparsityValue = 0.05,
              bool createTemporalBuckets = false,
+             bool durationSparsity = false,
+             double durationSparsityValue = 0,
              bool removeSparseTemporalBuckets = false,
              int patIdLength= 7,
              bool addDuration = true,
@@ -88,9 +90,12 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
                                                               createTemporalBuckets,
                                                               durationInWeeks,
                                                               durationInMonths,
+                                                              durationSparsity,
+                                                              durationSparsityValue,
                                                               removeSparseTemporalBuckets,
                                                               patIdLength,
                                                               numOfThreads);
+  
   Rcout << "created " << sequences.size() << " transitive sequences!\n";
   
   Rcout << "transform sequences from c++ structure in R DataFrame!\n";                                                                      
@@ -135,6 +140,8 @@ DataFrame extractNonSparseSequences(DataFrame df_dbMart,
     bool createTemporalBuckets = false;
     bool removeSparseTemporalBuckets = false;
     int patIdLength= 7;
+    bool durationSparsity = false;
+    double durationSparsityValue = 0;
     return tSPMPlus(df_dbMart,
                     outputDir,
                     outputFilePrefix,
@@ -142,6 +149,8 @@ DataFrame extractNonSparseSequences(DataFrame df_dbMart,
                     removeSparseSequences,
                     sparsityValue,
                     createTemporalBuckets,
+                    durationSparsity,
+                    durationSparsityValue,
                     removeSparseTemporalBuckets,
                     patIdLength,
                     addDuration,
@@ -163,6 +172,8 @@ DataFrame extractAllTransiviteSequences(DataFrame df_dbMart,
   bool createTemporalBuckets = false;
   bool removeSparseTemporalBuckets = false;
   int patIdLength= 7;
+  bool durationSparsity = false;
+  double durationSparsityValue = 0;
   return tSPMPlus(df_dbMart,
                   outputDir,
                   outputFilePrefix,
@@ -170,6 +181,8 @@ DataFrame extractAllTransiviteSequences(DataFrame df_dbMart,
                   removeSparseSequences,
                   sparsityValue,
                   createTemporalBuckets,
+                  durationSparsity,
+                  durationSparsityValue,
                   removeSparseTemporalBuckets,
                   patIdLength,
                   addDuration,
@@ -177,3 +190,5 @@ DataFrame extractAllTransiviteSequences(DataFrame df_dbMart,
                   durationInMonths);
   
 }
+
+
