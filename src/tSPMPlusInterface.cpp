@@ -191,4 +191,27 @@ DataFrame extractAllTransiviteSequences(DataFrame df_dbMart,
   
 }
 
+std::vector<temporalSequence> extractCandidatesForPhenx(std::vector<temporalSequence> &originalSequences,
+                                    unsigned long minDuration, unsigned int bitShift,
+                                    unsigned int lengthOfPhenx, unsigned int numOfBuckets,
+                                    std::vector<unsigned int> lowerBucketThresholds,
+                                    std::vector<unsigned int> &startPhenxOfInterrest,
+                                    int &numOfThreads){
+  
+  std::set<unsigned int> candidateEndPhenx;
+  candidateEndPhenx= extractEndPhenxWithGivenStartPhenx(originalSequences,
+                                                        minDuration,
+                                                        bitShift,
+                                                        lengthOfPhenx,
+                                                        startPhenxOfInterrest,
+                                                        numOfThreads);
+  std::vector<temporalSequence> sequencesOfInterest;
+  sequencesOfInterest = extractSequencesWithEnd(originalSequences,
+                                                bitShift,
+                                                lengthOfPhenx,
+                                                candidateEndPhenx,
+                                                numOfThreads);
+  
+  return sequencesOfInterest;
+}
 

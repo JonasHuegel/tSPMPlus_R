@@ -64,11 +64,11 @@ head(dems)
 head(dbMart.alpha)
 ```
 
-To create the transitive sequences we need only the dbmart data frame. The other data frames become important later, when we want to apply MLHO on the sequencing. tSPM+ requires that we use numeric identifiers for the patient number as well as for the identifier of the data mart entries (phenx). Calling the `transformDbMartToNumeric` function will create numeric ids (starting by zero and counting up wards) for the patient numbers and phenx.
+To create the transitive sequences we need only the dbmart data frame. The other data frames become important later, when we want to apply MLHO on the sequencing. tSPM+ requires that we use numeric identifiers for the patient number as well as for the identifier of the data mart entries (phenx). Calling the `transformDbMartToNumeric` function will create numeric ids (starting by zero and counting up wards) for the patient numbers and phenx. We are reducing the number of patients for this example, since we might run into memory issues on Laptops with 16GB RAM when later applying the `MSRMR` algorithm from the `MLHO` package.
 
 ```{r transform to numeric, warning=FALSE}
 dbMart <- tSPMPlus::transformDbMartToNumeric(dbMart.alpha)
-dbMart$dbMart <- dbMart$dbMart %>% subset(num_pat_num < 400)
+dbMart$dbMart <- dbMart$dbMart %>% subset(num_pat_num < 350)
 # dbMart contains a list of 3 Elements, the numeric dbMart,
 # the patient ID look-up table and the phenx look-up table
 head(dbMart$dbMart)
