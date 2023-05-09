@@ -9,5 +9,5 @@ Description: R package with C++ backend for fast, low memory consuming creation
   of transitive sequences. The package provides additional functionality to add the
   temportal lenght of the sequences.
 License: Confidential, DO NOT Distrubute!
-Imports: Rcpp (>= 1.0.10), tidyr, DT, data.table, dplyr
-LinkingTo: Rcpp, tidyr, DT, data.table, dplyr
+Imports: Rcpp (>= 1.0.10), tidyr, DT, data.table, dplyr, RcppParallel
+LinkingTo: Rcpp, RcppParallel

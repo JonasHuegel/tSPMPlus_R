@@ -2,6 +2,7 @@ CXX_STD = CXX17
 PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) \
   -lpthread -latomic
 PKG_LIBS = /usr/lib/libatomic.so
+PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()")
 PKG_CFLAGS = $(SHLIB_OPENMP_CFLAGS)
 
 
