@@ -206,7 +206,8 @@ std::vector<temporalSequence> extractCandidatesSequences(std::vector<temporalSeq
                                                         startPhenxOfInterrest,
                                                         numOfThreads);
   
-  Rcout<<"ExtractedCandidatePhenx: " << candidateEndPhenx.size() << std::endl;
+  Rcout<<"Extracted CandidatePhenx: " << candidateEndPhenx.size() << std::endl;
+  Rcout.flush();
   
   std::vector<temporalSequence> sequencesOfInterest;
   sequencesOfInterest = extractSequencesWithEnd(originalSequences,
@@ -214,7 +215,9 @@ std::vector<temporalSequence> extractCandidatesSequences(std::vector<temporalSeq
                                                 lengthOfPhenx,
                                                 candidateEndPhenx,
                                                 numOfThreads);
-
+  
+  Rcout<<"Extracted Candidate Sequences: " << sequencesOfInterest.size() << std::endl;
+  Rcout.flush();
   return sequencesOfInterest;
 }
 
@@ -224,10 +227,6 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> sequencesO
                                         std::vector<unsigned int> lowerBucketThresholds,
                                         unsigned int lengthOfPhenx){
   
-  std::vector<unsigned int> endPhenxVector;
-  endPhenxVector.reserve(sequencesOfInterest.size());
-  std::vector<unsigned int> durationBuckets;
-  durationBuckets.reserve(sequencesOfInterest.size());
   std::vector<unsigned long> seqIDs;
   seqIDs.reserve(sequencesOfInterest.size());
   std::vector<int> patIDs;
@@ -239,14 +238,28 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> sequencesO
     int patId = seq.patientID;
     long seqId = seq.seqID;
     long duration = seq.duration;
-    unsigned int endPhenx = getEndPhenx(seq, lengthOfPhenx);
-    unsigned int durationBucket = getCandidateBucket(duration, lowerBucketThresholds);
     patIDs.emplace_back(patId);
     seqIDs.emplace_back(seqId);
     durations.emplace_back(duration);
+  }
+  
+  sequencesOfInterest.clear();
+  std::vector<unsigned int> endPhenxVector;
+  endPhenxVector.reserve(patIDs.size());
+  std::vector<unsigned int> durationBuckets;
+  durationBuckets.reserve(patIDs.size());
+  for(size_t i = 0; i < patIDs.size();++i){
+    temporalSequence seq;
+    seq.seqID = seqIDs[i];
+
+    long duration = durations[i];
+    unsigned int endPhenx = getEndPhenx(seq, lengthOfPhenx);
+    unsigned int durationBucket = getCandidateBucket(duration, lowerBucketThresholds);
+
     endPhenxVector.emplace_back(endPhenx);
     durationBuckets.emplace_back(durationBucket);
   }
+  
   
   DataFrame  candidates = DataFrame::create(Named("patient_num") = patIDs, 
                                             Named("sequence") = seqIDs,
@@ -272,7 +285,7 @@ DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
                                        bool removeSparseSequences = true,
                                        double sparsityValue = 0.05,
                                        bool createTemporalBuckets = false,
-                                       bool durationSparsity = true,
+                                       bool durationSparsity = false,
                                        double durationSparsityValue = 0,
                                        bool removeSparseTemporalBuckets = false,
                                        int patIdLength= 7,
@@ -303,7 +316,8 @@ DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
                                                               patIdLength,
                                                               numOfThreads);
   
-  
+  Rcout << "Reached sequenceofInterest" << std::endl;
+  Rcout.flush();
   std::vector<temporalSequence> sequencesOfInterest = extractCandidatesSequences(sequences,
                                                                                  minDuration,
                                                                                  bitShift,
@@ -313,6 +327,8 @@ DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
                                                                                  as<std::vector<unsigned int>>(startPhenxOfInterrest),
                                                                                  numOfThreads);
   Rcout<< sequencesOfInterest.size() << std::endl;
-    
+  Rcout.flush();
+  sequences.clear();
+  sequences.shrink_to_fit();
   return transformToCandidateDataFrame(sequencesOfInterest, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
 }
