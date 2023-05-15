@@ -71,7 +71,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
              bool removeSparseTemporalBuckets = false,
              int patIdLength= 7,
              bool returnDuration = true,
-             double durationPeriods = daysPerMonth,
+             double durationPeriods = 30.437,
              unsigned int daysForCoOoccurence = 14 ){
   
   if(numOfThreads <= 0){
@@ -134,7 +134,7 @@ DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
                                       double sparsityValue,
                                       int numOfThreads,
                                       bool returnDuration = true,
-                                      double durationPeriods = daysPerMonth,
+                                      double durationPeriods = 30.437,
                                       unsigned int daysForCoOoccurence = 14 ){
     bool removeSparseSequences = true;
     bool createTemporalBuckets = false;
@@ -165,7 +165,7 @@ DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
                                     std::string outputFilePrefix,
                                     int numOfThreads,
                                     bool returnDuration = true,
-                                    double durationPeriods = daysPerMonth,
+                                    double durationPeriods = 30.437,
                                     unsigned int daysForCoOoccurence = 14 ){
   double sparsityValue = 0;
   bool removeSparseSequences = false;
@@ -291,8 +291,8 @@ DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
                                        bool removeSparseTemporalBuckets = false,
                                        int patIdLength= 7,
                                        bool returnDuration = true,
-                                       bool durationInWeeks = false,
-                                       bool durationInMonths = false ){
+                                       double durationPeriods = 30.437,
+                                       unsigned int daysForCoOoccurence = 14 ){
   
   
   if(numOfThreads <= 0){
@@ -309,13 +309,14 @@ DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
                                                               removeSparseSequences,
                                                               sparsityValue,
                                                               createTemporalBuckets,
-                                                              durationInWeeks,
-                                                              durationInMonths,
+                                                              durationPeriods,
+                                                              daysForCoOoccurence,
                                                               durationSparsity,
                                                               durationSparsityValue,
                                                               removeSparseTemporalBuckets,
                                                               patIdLength,
                                                               numOfThreads);
+  
   
   Rcout << "Reached sequenceofInterest" << std::endl;
   Rcout.flush();
