@@ -85,8 +85,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // getSequencesWithCandidateEnd
-DataFrame getSequencesWithCandidateEnd(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, unsigned long minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, unsigned int numOfBuckets, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterrest, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlus_getSequencesWithCandidateEnd(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP numOfBucketsSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterrestSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+DataFrame getSequencesWithCandidateEnd(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, unsigned long minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterrest, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, bool durationInWeeks, bool durationInMonths);
+RcppExport SEXP _tSPMPlus_getSequencesWithCandidateEnd(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterrestSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -96,7 +96,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned long >::type minDuration(minDurationSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type bitShift(bitShiftSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type lengthOfPhenx(lengthOfPhenxSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type numOfBuckets(numOfBucketsSEXP);
     Rcpp::traits::input_parameter< IntegerVector& >::type lowerBucketThresholds(lowerBucketThresholdsSEXP);
     Rcpp::traits::input_parameter< IntegerVector& >::type startPhenxOfInterrest(startPhenxOfInterrestSEXP);
     Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
@@ -110,7 +109,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type returnDuration(returnDurationSEXP);
     Rcpp::traits::input_parameter< bool >::type durationInWeeks(durationInWeeksSEXP);
     Rcpp::traits::input_parameter< bool >::type durationInMonths(durationInMonthsSEXP);
-    rcpp_result_gen = Rcpp::wrap(getSequencesWithCandidateEnd(df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, numOfBuckets, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationInWeeks, durationInMonths));
+    rcpp_result_gen = Rcpp::wrap(getSequencesWithCandidateEnd(df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationInWeeks, durationInMonths));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -120,7 +119,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlus_tSPMPlus", (DL_FUNC) &_tSPMPlus_tSPMPlus, 14},
     {"_tSPMPlus_extractNonSparseSequences", (DL_FUNC) &_tSPMPlus_extractNonSparseSequences, 8},
     {"_tSPMPlus_extractAllTransiviteSequences", (DL_FUNC) &_tSPMPlus_extractAllTransiviteSequences, 7},
-    {"_tSPMPlus_getSequencesWithCandidateEnd", (DL_FUNC) &_tSPMPlus_getSequencesWithCandidateEnd, 20},
+    {"_tSPMPlus_getSequencesWithCandidateEnd", (DL_FUNC) &_tSPMPlus_getSequencesWithCandidateEnd, 19},
     {NULL, NULL, 0}
 };
 
