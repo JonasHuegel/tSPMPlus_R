@@ -99,7 +99,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   Rcout << "created " << sequences.size() << " transitive sequences!\n";
   
   Rcout << "transform sequences from c++ structure in R DataFrame!\n";                                                                      
-  std::vector<unsigned long> seqIDs;
+  std::vector<std::uint64_t> seqIDs;
   seqIDs.reserve(sequences.size());
   std::vector<int> patIDs;
   patIDs.reserve(sequences.size());
@@ -110,8 +110,8 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   
   for(temporalSequence seq: sequences){
     int patId = seq.patientID;
-    long seqId = seq.seqID;
-    long duration = seq.duration;
+    std::int64_t seqId = seq.seqID;
+    unsigned int duration = seq.duration;
     patIDs.emplace_back(patId);
     seqIDs.emplace_back(seqId);
     if(returnDuration){
@@ -192,7 +192,7 @@ DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
 }
 
 std::vector<temporalSequence> extractCandidatesSequences(std::vector<temporalSequence> &originalSequences,
-                                    unsigned long minDuration, unsigned int bitShift,
+                                    std::uint64_t minDuration, unsigned int bitShift,
                                     unsigned int lengthOfPhenx, unsigned int numOfBuckets,
                                     std::vector<unsigned int> lowerBucketThresholds,
                                     std::vector<unsigned int> startPhenxOfInterrest,
@@ -227,7 +227,7 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
                                         std::vector<unsigned int> lowerBucketThresholds,
                                         unsigned int lengthOfPhenx){
   
-  std::vector<unsigned long> seqIDs;
+  std::vector<std::uint64_t> seqIDs;
   seqIDs.reserve(sequencesOfInterest.size());
   std::vector<int> patIDs;
   patIDs.reserve(sequencesOfInterest.size());
@@ -236,14 +236,16 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
   
   for(temporalSequence seq : sequencesOfInterest){
     int patId = seq.patientID;
-    long seqId = seq.seqID;
-    long duration = seq.duration;
+    std::uint64_t seqId = seq.seqID;
+    int duration = seq.duration;
     patIDs.emplace_back(patId);
     seqIDs.emplace_back(seqId);
     durations.emplace_back(duration);
   }
   
   sequencesOfInterest.clear();
+  sequencesOfInterest.shrink_to_fit();
+  
   std::vector<unsigned int> endPhenxVector;
   endPhenxVector.reserve(patIDs.size());
   std::vector<unsigned int> durationBuckets;
@@ -252,7 +254,7 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
     temporalSequence seq;
     seq.seqID = seqIDs[i];
 
-    long duration = durations[i];
+    unsigned int duration = durations[i];
     unsigned int endPhenx = getEndPhenx(seq, lengthOfPhenx);
     unsigned int durationBucket = getCandidateBucket(duration, lowerBucketThresholds);
 
@@ -275,7 +277,7 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
 DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
                                        std::string outputDir,
                                        std::string outputFilePrefix,
-                                       unsigned long minDuration,
+                                       std::uint64_t minDuration,
                                        unsigned int bitShift,
                                        unsigned int lengthOfPhenx,
                                        IntegerVector &lowerBucketThresholds,

@@ -85,7 +85,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // getSequencesWithCandidateEnd
-DataFrame getSequencesWithCandidateEnd(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, unsigned long minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterrest, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, bool durationInWeeks, bool durationInMonths);
+DataFrame getSequencesWithCandidateEnd(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, std::uint64_t minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterrest, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, bool durationInWeeks, bool durationInMonths);
 RcppExport SEXP _tSPMPlus_getSequencesWithCandidateEnd(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterrestSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -93,7 +93,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame& >::type df_dbMart(df_dbMartSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
-    Rcpp::traits::input_parameter< unsigned long >::type minDuration(minDurationSEXP);
+    Rcpp::traits::input_parameter< std::uint64_t >::type minDuration(minDurationSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type bitShift(bitShiftSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type lengthOfPhenx(lengthOfPhenxSEXP);
     Rcpp::traits::input_parameter< IntegerVector& >::type lowerBucketThresholds(lowerBucketThresholdsSEXP);
