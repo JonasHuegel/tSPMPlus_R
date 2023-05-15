@@ -34,7 +34,7 @@ std::vector<dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
 
 
 // [[Rcpp::export]]
-size_t createTransitiveSequences(DataFrame df_dbMart,size_t numOfPatients, std::string &outputDir, 
+size_t createTransitiveSequences(DataFrame &df_dbMart,size_t numOfPatients, std::string &outputDir, 
                                  std::string &outputFilePrefix, int numOfThreads){
   Rcout <<"Preparing data!\n";
   Rcout.flush();
@@ -70,9 +70,9 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
              double durationSparsityValue = 0,
              bool removeSparseTemporalBuckets = false,
              int patIdLength= 7,
-             bool addDuration = true,
-             bool durationInWeeks = false,
-             bool durationInMonths = false ){
+             bool returnDuration = true,
+             double durationPeriods = daysPerMonth,
+             unsigned int daysForCoOoccurence = 14 ){
   
   if(numOfThreads <= 0){
     numOfThreads = 1;
@@ -88,8 +88,8 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
                                                               removeSparseSequences,
                                                               sparsityValue,
                                                               createTemporalBuckets,
-                                                              durationInWeeks,
-                                                              durationInMonths,
+                                                              durationPeriods,
+                                                              daysForCoOoccurence,
                                                               durationSparsity,
                                                               durationSparsityValue,
                                                               removeSparseTemporalBuckets,
@@ -104,7 +104,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   std::vector<int> patIDs;
   patIDs.reserve(sequences.size());
   std::vector<unsigned int> durations;
-  if(addDuration){
+  if(returnDuration){
     durations.reserve(sequences.size());
   }
   
@@ -114,12 +114,12 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
     long duration = seq.duration;
     patIDs.emplace_back(patId);
     seqIDs.emplace_back(seqId);
-    if(addDuration){
+    if(returnDuration){
       durations.emplace_back(duration);
     }
   }
   DataFrame sequenceDataFrame;
-  if(addDuration){
+  if(returnDuration){
     sequenceDataFrame= DataFrame::create(Named("patient_num") = patIDs, Named("sequence") = seqIDs, Named("duration") = durations);
   }else{
     sequenceDataFrame = DataFrame::create(Named("patient_num") = patIDs, Named("sequence") = seqIDs);
@@ -128,14 +128,14 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
 } 
   
 // [[Rcpp::export]]
-DataFrame extractNonSparseSequences(DataFrame df_dbMart,
+DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
                                       std::string outputDir,
                                       std::string outputFilePrefix,
                                       double sparsityValue,
                                       int numOfThreads,
-                                      bool addDuration = true,
-                                      bool durationInWeeks = false,
-                                      bool durationInMonths = false ){
+                                      bool returnDuration = true,
+                                      double durationPeriods = daysPerMonth,
+                                      unsigned int daysForCoOoccurence = 14 ){
     bool removeSparseSequences = true;
     bool createTemporalBuckets = false;
     bool removeSparseTemporalBuckets = false;
@@ -153,20 +153,20 @@ DataFrame extractNonSparseSequences(DataFrame df_dbMart,
                     durationSparsityValue,
                     removeSparseTemporalBuckets,
                     patIdLength,
-                    addDuration,
-                    durationInWeeks,
-                    durationInMonths);
+                    returnDuration,
+                    durationPeriods,
+                    daysForCoOoccurence);
 
 }
 
 // [[Rcpp::export]]
-DataFrame extractAllTransiviteSequences(DataFrame df_dbMart,
+DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
                                     std::string outputDir,
                                     std::string outputFilePrefix,
                                     int numOfThreads,
-                                    bool addDuration = true,
-                                    bool durationInWeeks = false,
-                                    bool durationInMonths = false ){
+                                    bool returnDuration = true,
+                                    double durationPeriods = daysPerMonth,
+                                    unsigned int daysForCoOoccurence = 14 ){
   double sparsityValue = 0;
   bool removeSparseSequences = false;
   bool createTemporalBuckets = false;
@@ -185,9 +185,9 @@ DataFrame extractAllTransiviteSequences(DataFrame df_dbMart,
                   durationSparsityValue,
                   removeSparseTemporalBuckets,
                   patIdLength,
-                  addDuration,
-                  durationInWeeks,
-                  durationInMonths);
+                  returnDuration,
+                  durationPeriods,
+                  daysForCoOoccurence);
   
 }
 
@@ -223,7 +223,7 @@ std::vector<temporalSequence> extractCandidatesSequences(std::vector<temporalSeq
 
 
 
-DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> sequencesOfInterest,
+DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequencesOfInterest,
                                         std::vector<unsigned int> lowerBucketThresholds,
                                         unsigned int lengthOfPhenx){
   
@@ -289,7 +289,7 @@ DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
                                        double durationSparsityValue = 0,
                                        bool removeSparseTemporalBuckets = false,
                                        int patIdLength= 7,
-                                       bool addDuration = true,
+                                       bool returnDuration = true,
                                        bool durationInWeeks = false,
                                        bool durationInMonths = false ){
   

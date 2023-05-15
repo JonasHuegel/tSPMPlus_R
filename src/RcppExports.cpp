@@ -11,12 +11,12 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // createTransitiveSequences
-size_t createTransitiveSequences(DataFrame df_dbMart, size_t numOfPatients, std::string& outputDir, std::string& outputFilePrefix, int numOfThreads);
+size_t createTransitiveSequences(DataFrame& df_dbMart, size_t numOfPatients, std::string& outputDir, std::string& outputFilePrefix, int numOfThreads);
 RcppExport SEXP _tSPMPlus_createTransitiveSequences(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df_dbMart(df_dbMartSEXP);
+    Rcpp::traits::input_parameter< DataFrame& >::type df_dbMart(df_dbMartSEXP);
     Rcpp::traits::input_parameter< size_t >::type numOfPatients(numOfPatientsSEXP);
     Rcpp::traits::input_parameter< std::string& >::type outputDir(outputDirSEXP);
     Rcpp::traits::input_parameter< std::string& >::type outputFilePrefix(outputFilePrefixSEXP);
@@ -26,8 +26,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // tSPMPlus
-DataFrame tSPMPlus(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool addDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlus_tSPMPlus(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+DataFrame tSPMPlus(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, double durationPeriods, unsigned int daysForCoOoccurence);
+RcppExport SEXP _tSPMPlus_tSPMPlus(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -42,51 +42,51 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type durationSparsityValue(durationSparsityValueSEXP);
     Rcpp::traits::input_parameter< bool >::type removeSparseTemporalBuckets(removeSparseTemporalBucketsSEXP);
     Rcpp::traits::input_parameter< int >::type patIdLength(patIdLengthSEXP);
-    Rcpp::traits::input_parameter< bool >::type addDuration(addDurationSEXP);
-    Rcpp::traits::input_parameter< bool >::type durationInWeeks(durationInWeeksSEXP);
-    Rcpp::traits::input_parameter< bool >::type durationInMonths(durationInMonthsSEXP);
-    rcpp_result_gen = Rcpp::wrap(tSPMPlus(df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, addDuration, durationInWeeks, durationInMonths));
+    Rcpp::traits::input_parameter< bool >::type returnDuration(returnDurationSEXP);
+    Rcpp::traits::input_parameter< double >::type durationPeriods(durationPeriodsSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type daysForCoOoccurence(daysForCoOoccurenceSEXP);
+    rcpp_result_gen = Rcpp::wrap(tSPMPlus(df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence));
     return rcpp_result_gen;
 END_RCPP
 }
 // extractNonSparseSequences
-DataFrame extractNonSparseSequences(DataFrame df_dbMart, std::string outputDir, std::string outputFilePrefix, double sparsityValue, int numOfThreads, bool addDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlus_extractNonSparseSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP sparsityValueSEXP, SEXP numOfThreadsSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+DataFrame extractNonSparseSequences(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, double sparsityValue, int numOfThreads, bool returnDuration, double durationPeriods, unsigned int daysForCoOoccurence);
+RcppExport SEXP _tSPMPlus_extractNonSparseSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP sparsityValueSEXP, SEXP numOfThreadsSEXP, SEXP returnDurationSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df_dbMart(df_dbMartSEXP);
+    Rcpp::traits::input_parameter< DataFrame& >::type df_dbMart(df_dbMartSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
     Rcpp::traits::input_parameter< double >::type sparsityValue(sparsityValueSEXP);
     Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
-    Rcpp::traits::input_parameter< bool >::type addDuration(addDurationSEXP);
-    Rcpp::traits::input_parameter< bool >::type durationInWeeks(durationInWeeksSEXP);
-    Rcpp::traits::input_parameter< bool >::type durationInMonths(durationInMonthsSEXP);
-    rcpp_result_gen = Rcpp::wrap(extractNonSparseSequences(df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration, durationInWeeks, durationInMonths));
+    Rcpp::traits::input_parameter< bool >::type returnDuration(returnDurationSEXP);
+    Rcpp::traits::input_parameter< double >::type durationPeriods(durationPeriodsSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type daysForCoOoccurence(daysForCoOoccurenceSEXP);
+    rcpp_result_gen = Rcpp::wrap(extractNonSparseSequences(df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, returnDuration, durationPeriods, daysForCoOoccurence));
     return rcpp_result_gen;
 END_RCPP
 }
 // extractAllTransiviteSequences
-DataFrame extractAllTransiviteSequences(DataFrame df_dbMart, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool addDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlus_extractAllTransiviteSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+DataFrame extractAllTransiviteSequences(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool returnDuration, double durationPeriods, unsigned int daysForCoOoccurence);
+RcppExport SEXP _tSPMPlus_extractAllTransiviteSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP returnDurationSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df_dbMart(df_dbMartSEXP);
+    Rcpp::traits::input_parameter< DataFrame& >::type df_dbMart(df_dbMartSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
     Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
-    Rcpp::traits::input_parameter< bool >::type addDuration(addDurationSEXP);
-    Rcpp::traits::input_parameter< bool >::type durationInWeeks(durationInWeeksSEXP);
-    Rcpp::traits::input_parameter< bool >::type durationInMonths(durationInMonthsSEXP);
-    rcpp_result_gen = Rcpp::wrap(extractAllTransiviteSequences(df_dbMart, outputDir, outputFilePrefix, numOfThreads, addDuration, durationInWeeks, durationInMonths));
+    Rcpp::traits::input_parameter< bool >::type returnDuration(returnDurationSEXP);
+    Rcpp::traits::input_parameter< double >::type durationPeriods(durationPeriodsSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type daysForCoOoccurence(daysForCoOoccurenceSEXP);
+    rcpp_result_gen = Rcpp::wrap(extractAllTransiviteSequences(df_dbMart, outputDir, outputFilePrefix, numOfThreads, returnDuration, durationPeriods, daysForCoOoccurence));
     return rcpp_result_gen;
 END_RCPP
 }
 // getSequencesWithCandidateEnd
-DataFrame getSequencesWithCandidateEnd(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, unsigned long minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, unsigned int numOfBuckets, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterrest, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool addDuration, bool durationInWeeks, bool durationInMonths);
-RcppExport SEXP _tSPMPlus_getSequencesWithCandidateEnd(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP numOfBucketsSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterrestSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP addDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
+DataFrame getSequencesWithCandidateEnd(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, unsigned long minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, unsigned int numOfBuckets, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterrest, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, bool durationInWeeks, bool durationInMonths);
+RcppExport SEXP _tSPMPlus_getSequencesWithCandidateEnd(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP numOfBucketsSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterrestSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationInWeeksSEXP, SEXP durationInMonthsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -107,10 +107,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type durationSparsityValue(durationSparsityValueSEXP);
     Rcpp::traits::input_parameter< bool >::type removeSparseTemporalBuckets(removeSparseTemporalBucketsSEXP);
     Rcpp::traits::input_parameter< int >::type patIdLength(patIdLengthSEXP);
-    Rcpp::traits::input_parameter< bool >::type addDuration(addDurationSEXP);
+    Rcpp::traits::input_parameter< bool >::type returnDuration(returnDurationSEXP);
     Rcpp::traits::input_parameter< bool >::type durationInWeeks(durationInWeeksSEXP);
     Rcpp::traits::input_parameter< bool >::type durationInMonths(durationInMonthsSEXP);
-    rcpp_result_gen = Rcpp::wrap(getSequencesWithCandidateEnd(df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, numOfBuckets, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, addDuration, durationInWeeks, durationInMonths));
+    rcpp_result_gen = Rcpp::wrap(getSequencesWithCandidateEnd(df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, numOfBuckets, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationInWeeks, durationInMonths));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -5,19 +5,19 @@ createTransitiveSequences <- function(df_dbMart, numOfPatients, outputDir, outpu
     .Call(`_tSPMPlus_createTransitiveSequences`, df_dbMart, numOfPatients, outputDir, outputFilePrefix, numOfThreads)
 }
 
-tSPMPlus <- function(df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
-    .Call(`_tSPMPlus_tSPMPlus`, df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, addDuration, durationInWeeks, durationInMonths)
+tSPMPlus <- function(df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods, daysForCoOoccurence = 14L) {
+    .Call(`_tSPMPlus_tSPMPlus`, df_dbMart, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence)
 }
 
-extractNonSparseSequences <- function(df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
-    .Call(`_tSPMPlus_extractNonSparseSequences`, df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, addDuration, durationInWeeks, durationInMonths)
+extractNonSparseSequences <- function(df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, returnDuration = TRUE, durationPeriods, daysForCoOoccurence = 14L) {
+    .Call(`_tSPMPlus_extractNonSparseSequences`, df_dbMart, outputDir, outputFilePrefix, sparsityValue, numOfThreads, returnDuration, durationPeriods, daysForCoOoccurence)
 }
 
-extractAllTransiviteSequences <- function(df_dbMart, outputDir, outputFilePrefix, numOfThreads, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
-    .Call(`_tSPMPlus_extractAllTransiviteSequences`, df_dbMart, outputDir, outputFilePrefix, numOfThreads, addDuration, durationInWeeks, durationInMonths)
+extractAllTransiviteSequences <- function(df_dbMart, outputDir, outputFilePrefix, numOfThreads, returnDuration = TRUE, durationPeriods, daysForCoOoccurence = 14L) {
+    .Call(`_tSPMPlus_extractAllTransiviteSequences`, df_dbMart, outputDir, outputFilePrefix, numOfThreads, returnDuration, durationPeriods, daysForCoOoccurence)
 }
 
-getSequencesWithCandidateEnd <- function(df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, numOfBuckets, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, addDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
-    .Call(`_tSPMPlus_getSequencesWithCandidateEnd`, df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, numOfBuckets, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, addDuration, durationInWeeks, durationInMonths)
+getSequencesWithCandidateEnd <- function(df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, numOfBuckets, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationInWeeks = FALSE, durationInMonths = FALSE) {
+    .Call(`_tSPMPlus_getSequencesWithCandidateEnd`, df_dbMart, outputDir, outputFilePrefix, minDuration, bitShift, lengthOfPhenx, numOfBuckets, lowerBucketThresholds, startPhenxOfInterrest, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationInWeeks, durationInMonths)
 }
 
