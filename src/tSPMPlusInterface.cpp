@@ -282,9 +282,68 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
 }
 
 
+// [[Rcpp::export]]
+DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
+                                   
+                                   unsigned int bitShift,
+                                   unsigned int lengthOfPhenx,
+                                   IntegerVector &lowerBucketThresholds,
+                                   IntegerVector &endPhenx,
+                                   bool includeCorBuckets = true,
+                                   std::uint64_t minDuration = 0,
+                                   bool storeSeqDuringCreation = false,
+                                   std::string outputDir = NULL,
+                                   std::string outputFilePrefix = NULL,
+                                   int numOfThreads = 1,
+                                   bool removeSparseSequences = true,
+                                   double sparsityValue = 0.05,
+                                   bool createTemporalBuckets = false,
+                                   bool durationSparsity = false,
+                                   double durationSparsityValue = 0,
+                                   bool removeSparseTemporalBuckets = false,
+                                   int patIdLength= 7,
+                                   bool returnDuration = true,
+                                   double durationPeriods = 30.437,
+                                   unsigned int daysForCoOoccurence = 14 ){
+  
+  
+  if(numOfThreads <= 0){
+    numOfThreads = 1;
+  }
+  Rcout <<"Preparing data!\n";
+  Rcout.flush();
+  std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+  Rcout <<"Data prepared!\n";
+  Rcout.flush();
+  std::vector<temporalSequence> sequences =  sequenceWorkflow(dbMart,
+                                                              storeSeqDuringCreation,
+                                                              outputDir,
+                                                              outputFilePrefix,
+                                                              removeSparseSequences,
+                                                              sparsityValue,
+                                                              createTemporalBuckets,
+                                                              durationPeriods,
+                                                              daysForCoOoccurence,
+                                                              durationSparsity,
+                                                              durationSparsityValue,
+                                                              removeSparseTemporalBuckets,
+                                                              patIdLength,
+                                                              numOfThreads);
+  
+
+  
+  std::set<unsigned int > endPhenxSet;
+  endPhenxSet.insert(endPhenx.begin(), endPhenx.end());
+  sequences = extractSequencesWithEnd(sequences, bitShift, lengthOfPhenx, endPhenxSet, numOfThreads);
+  Rcout<< sequences.size() << std::endl;
+  Rcout.flush();
+  return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+
+}
+
 
 // [[Rcpp::export]]
-DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
+DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
                                        std::uint64_t minDuration,
                                        unsigned int bitShift,
                                        unsigned int lengthOfPhenx,
