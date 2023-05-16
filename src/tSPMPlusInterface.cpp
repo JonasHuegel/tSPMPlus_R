@@ -34,8 +34,12 @@ std::vector<dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
 
 
 // [[Rcpp::export]]
-size_t createTransitiveSequences(DataFrame &df_dbMart,size_t numOfPatients, std::string &outputDir, 
-                                 std::string &outputFilePrefix, int numOfThreads){
+size_t createTransitiveSequences(DataFrame &df_dbMart,
+                                 size_t numOfPatients,
+                                 bool storeSeqDuringCreation = false,
+                                 std::string outputDir = NULL, 
+                                 std::string outputFilePrefix = NULL,
+                                 int numOfThreads = 1){
   Rcout <<"Preparing data!\n";
   Rcout.flush();
   std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
@@ -60,9 +64,10 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,size_t numOfPatients, std:
 
 // [[Rcpp::export]]
 DataFrame tSPMPlus(DataFrame &df_dbMart,
-             std::string outputDir,
-             std::string outputFilePrefix,
-             int numOfThreads,
+             bool storeSeqDuringCreation = false,
+             std::string outputDir = NULL,
+             std::string outputFilePrefix = NULL,
+             int numOfThreads = 1,
              bool removeSparseSequences = true,
              double sparsityValue = 0.05,
              bool createTemporalBuckets = false,
@@ -83,6 +88,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   Rcout <<"Data prepared!\n";
   Rcout.flush();
   std::vector<temporalSequence> sequences =  sequenceWorkflow(dbMart,
+                                                              storeSeqDuringCreation,
                                                               outputDir,
                                                               outputFilePrefix,
                                                               removeSparseSequences,
@@ -129,10 +135,11 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   
 // [[Rcpp::export]]
 DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
-                                      std::string outputDir,
-                                      std::string outputFilePrefix,
-                                      double sparsityValue,
-                                      int numOfThreads,
+                                      bool storeSeqDuringCreation = false,
+                                      std::string outputDir = NULL,
+                                      std::string outputFilePrefix = NULL,
+                                      double sparsityValue = 0.05,
+                                      int numOfThreads = 1,
                                       bool returnDuration = true,
                                       double durationPeriods = 30.437,
                                       unsigned int daysForCoOoccurence = 14 ){
@@ -143,6 +150,7 @@ DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
     bool durationSparsity = false;
     double durationSparsityValue = 0;
     return tSPMPlus(df_dbMart,
+                    storeSeqDuringCreation,
                     outputDir,
                     outputFilePrefix,
                     numOfThreads,
@@ -161,9 +169,10 @@ DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
 
 // [[Rcpp::export]]
 DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
-                                    std::string outputDir,
-                                    std::string outputFilePrefix,
-                                    int numOfThreads,
+                                    bool storeSeqDuringCreation = false,
+                                    std::string outputDir = NULL,
+                                    std::string outputFilePrefix = NULL,
+                                    int numOfThreads = 1,
                                     bool returnDuration = true,
                                     double durationPeriods = 30.437,
                                     unsigned int daysForCoOoccurence = 14 ){
@@ -175,6 +184,7 @@ DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
   bool durationSparsity = false;
   double durationSparsityValue = 0;
   return tSPMPlus(df_dbMart,
+                  storeSeqDuringCreation,
                   outputDir,
                   outputFilePrefix,
                   numOfThreads,
@@ -275,13 +285,14 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
 
 // [[Rcpp::export]]
 DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
-                                       std::string outputDir,
-                                       std::string outputFilePrefix,
                                        std::uint64_t minDuration,
                                        unsigned int bitShift,
                                        unsigned int lengthOfPhenx,
                                        IntegerVector &lowerBucketThresholds,
                                        IntegerVector &startPhenxOfInterrest,
+                                       bool storeSeqDuringCreation = false,
+                                       std::string outputDir = NULL,
+                                       std::string outputFilePrefix = NULL,
                                        int numOfThreads = 1,
                                        bool removeSparseSequences = true,
                                        double sparsityValue = 0.05,
@@ -304,6 +315,7 @@ DataFrame getSequencesWithCandidateEnd(DataFrame &df_dbMart,
   Rcout <<"Data prepared!\n";
   Rcout.flush();
   std::vector<temporalSequence> sequences =  sequenceWorkflow(dbMart,
+                                                              storeSeqDuringCreation,
                                                               outputDir,
                                                               outputFilePrefix,
                                                               removeSparseSequences,
