@@ -284,12 +284,11 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
 
 // [[Rcpp::export]]
 DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
-                                   
                                    unsigned int bitShift,
                                    unsigned int lengthOfPhenx,
                                    IntegerVector &lowerBucketThresholds,
                                    IntegerVector &endPhenx,
-                                   bool includeCorBuckets = true,
+                                   bool includeCorBuckets = false,
                                    std::uint64_t minDuration = 0,
                                    bool storeSeqDuringCreation = false,
                                    std::string outputDir = NULL,
@@ -404,4 +403,20 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
   sequences.clear();
   sequences.shrink_to_fit();
   return transformToCandidateDataFrame(sequencesOfInterest, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+}
+
+
+// [[Rcpp::export]]
+unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght = 7){
+  return getStartPhenx(sequence, phenxLenght);
+}
+
+// [[Rcpp::export]]
+unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght = 7){
+  return getEndPhenx(sequence, phenxLenght); 
+}
+
+// [[Rcpp::export]]
+std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, unsigned int phenxLength = 7){
+  return createSequence(firstPhenx, secondPhenx, phenxLength);
 }

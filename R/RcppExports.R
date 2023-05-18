@@ -25,3 +25,15 @@ getCandidateSequencesForPOI <- function(df_dbMart, minDuration, bitShift, length
     .Call(`_tSPMPlus_getCandidateSequencesForPOI`, df_dbMart, minDuration, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenxOfInterrest, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence)
 }
 
+getStartPhenxFromSequence <- function(sequence, phenxLenght = 7L) {
+    .Call(`_tSPMPlus_getStartPhenxFromSequence`, sequence, phenxLenght)
+}
+
+getEndPhenxFromSequence <- function(sequence, phenxLenght = 7L) {
+    .Call(`_tSPMPlus_getEndPhenxFromSequence`, sequence, phenxLenght)
+}
+
+createSequence <- function(firstPhenx, secondPhenx, phenxLength = 7L) {
+    .Call(`_tSPMPlus_createSequence`, firstPhenx, secondPhenx, phenxLength)
+}
+

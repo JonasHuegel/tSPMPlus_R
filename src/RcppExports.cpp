@@ -149,6 +149,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getStartPhenxFromSequence
+unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght);
+RcppExport SEXP _tSPMPlus_getStartPhenxFromSequence(SEXP sequenceSEXP, SEXP phenxLenghtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::uint64_t >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type phenxLenght(phenxLenghtSEXP);
+    rcpp_result_gen = Rcpp::wrap(getStartPhenxFromSequence(sequence, phenxLenght));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getEndPhenxFromSequence
+unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght);
+RcppExport SEXP _tSPMPlus_getEndPhenxFromSequence(SEXP sequenceSEXP, SEXP phenxLenghtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::uint64_t >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type phenxLenght(phenxLenghtSEXP);
+    rcpp_result_gen = Rcpp::wrap(getEndPhenxFromSequence(sequence, phenxLenght));
+    return rcpp_result_gen;
+END_RCPP
+}
+// createSequence
+std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, unsigned int phenxLength);
+RcppExport SEXP _tSPMPlus_createSequence(SEXP firstPhenxSEXP, SEXP secondPhenxSEXP, SEXP phenxLengthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< unsigned int >::type firstPhenx(firstPhenxSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type secondPhenx(secondPhenxSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type phenxLength(phenxLengthSEXP);
+    rcpp_result_gen = Rcpp::wrap(createSequence(firstPhenx, secondPhenx, phenxLength));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlus_createTransitiveSequences", (DL_FUNC) &_tSPMPlus_createTransitiveSequences, 6},
@@ -157,6 +194,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlus_extractAllTransiviteSequences", (DL_FUNC) &_tSPMPlus_extractAllTransiviteSequences, 8},
     {"_tSPMPlus_getSequencesWithEndPhenx", (DL_FUNC) &_tSPMPlus_getSequencesWithEndPhenx, 21},
     {"_tSPMPlus_getCandidateSequencesForPOI", (DL_FUNC) &_tSPMPlus_getCandidateSequencesForPOI, 20},
+    {"_tSPMPlus_getStartPhenxFromSequence", (DL_FUNC) &_tSPMPlus_getStartPhenxFromSequence, 2},
+    {"_tSPMPlus_getEndPhenxFromSequence", (DL_FUNC) &_tSPMPlus_getEndPhenxFromSequence, 2},
+    {"_tSPMPlus_createSequence", (DL_FUNC) &_tSPMPlus_createSequence, 3},
     {NULL, NULL, 0}
 };
 
