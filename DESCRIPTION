@@ -11,3 +11,4 @@ Description: R package with C++ backend for fast, low memory consuming creation
 License: Confidential, DO NOT Distrubute!
 Imports: Rcpp (>= 1.0.10), tidyr, DT, data.table, dplyr, RcppParallel
 LinkingTo: Rcpp, RcppParallel
+LazyData: true
