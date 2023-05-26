@@ -16,7 +16,7 @@ transformDbMartToNumeric<- function(dbmart){
   setDT(patLookUp)
   
   patLookUp[,num_pat_num := .I]
-  patLookUp <- patLookUp %>% mutate(num_pat_num = num_pat_num -1)
+  patLookUp <- patLookUp %>% dplyr::mutate(num_pat_num = num_pat_num -1)
   
   dbmart_num <- dbmart %>% dplyr::left_join(patLookUp, by="patient_num")
   
@@ -30,7 +30,7 @@ transformDbMartToNumeric<- function(dbmart){
   
   dbmart_num <- dbmart_num %>% dplyr::left_join(phenxLookUp, by="phenx")
   
-  dbmart_num <- dbmart_num %>% select(num_pat_num, num_Phenx, start_date)
+  dbmart_num <- dbmart_num %>% dplyr::select(num_pat_num, num_Phenx, start_date)
   
   dbmart_num <- dbmart_num[order(dbmart_num$num_pat_num,dbmart_num$start_date),]
   

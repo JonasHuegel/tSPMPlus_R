@@ -10,8 +10,8 @@ Description: R package with C++ backend for fast, low memory consuming creation
   temportal lenght of the sequences.
 License: Confidential, DO NOT Distrubute!
 Imports: Rcpp (>= 1.0.10), tidyr, DT, data.table, dplyr, RcppParallel
-Suggests: knitr, rmarkdown, pacman,mlho, devtools, data.table, devtools, backports, Hmisc, tidyr,dplyr,ggplot2,plyr,scales,readr,
-               httr, DT, lubridate, tidyverse,reshape2,foreach,doParallel,caret,gbm,lubridate,praznik, epitools
+Suggests: knitr, rmarkdown, pacman,mlho, devtools, backports, Hmisc, ggplot2, plyr, scales, readr,
+               httr, tidyverse, reshape2, foreach, doParallel, caret, gbm, lubridate, praznik, epitools
 LinkingTo: Rcpp, RcppParallel
 LazyData: true
 VignetteBuilder: knitr, rmarkdown
