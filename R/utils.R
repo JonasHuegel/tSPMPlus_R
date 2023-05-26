@@ -5,10 +5,7 @@
 #'@returns a list of data frames containing the numeric datamart and the patient id and phenx look up tables
 #'
 transformDbMartToNumeric<- function(dbmart){
-  require(dplyr)
-  require(tidyr)
-  require(DT)
-  require(data.table)
+
   patient_num <- c(unique(dbmart$patient_num))
   
   patLookUp <- as.data.frame(patient_num)
