@@ -1,9 +1,7 @@
 CXX_STD = CXX17
 PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -v  \
   -lpthread -lstdc++fs -latomic -fopenmp -DRCPP_PARALLEL_USE_TBB=1
-PKG_LIBS +=  $(SHLIB_OPENMP_CXXFLAGS)
-PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()") -latomic
-PKG_CFLAGS = $(SHLIB_OPENMP_CFLAGS)
+PKG_LIBS =  $(SHLIB_OPENMP_CXXFLAGS) $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()") -latomic
 
 
 

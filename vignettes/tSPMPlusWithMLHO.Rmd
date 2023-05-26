@@ -84,12 +84,14 @@ The `tSPM+` package provides multiple functions to extract the temporal sequence
 #define function parameters
 
 #modify this path, tSPM+ will write out a binary file for each patient containing the sequence
+
 outDir = "out/"
 outputFilePrefix = "tSPMPlus_MLHO_Example"
 sparsity = 0.05
 require(parallel)
 numOfThreads = detectCores()
-nonSparseSequences = tSPMPlus::extractNonSparseSequences(as.data.frame(dbMart$dbMart),outDir, outputFilePrefix, sparsity, numOfThreads)
+storeSequencesDuringCreation = FALSE ## set to true if you want to store all the plain sequences to a file during the creation 
+nonSparseSequences = tSPMPlus::extractNonSparseSequences(as.data.frame(dbMart$dbMart),storeSequencesDuringCreation,outDir, outputFilePrefix, sparsity, numOfThreads)
 ```
 
 If we take a look at the `nonSparseSequences` data frame, we will see that it consists of three columns. One for the patient Id, one for the sequence and for the duration (time diff between the two phenx of the sequence). The sequences are stored as numbers and but are human readable and interpretable. A sequence consists of the both numeric ids of it phenx, where the second sequence was filled with leading 0 up to seven digits. In our example the first non sparse sequence for `patient 0` is `1380000138` and consist of the both phenx with the id `138`. If we want to get the description of the corresponding phenx, we first need to look up the corresponding alphanumeric value ID in `dbMart$phenxLookUp`, before we can extract the corresponding description from the original dbmart.

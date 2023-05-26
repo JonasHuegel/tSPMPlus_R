@@ -4,7 +4,7 @@ author: "Jonas Hügel & Hossein Estiri"
 date: "May 22, 2023"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tSPMPlus with MLHO}
+  %\VignetteIndexEntry{Implementing the WHO Long covid Definition utilizing tSPM+}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -285,9 +285,18 @@ Now we can iterate over the endPhenx vector to calculate all the spearmen correl
 ``` {r correlation computation}
 ## Correlation computation
 
-## setup parallel back end to use many processors
-cores<-detectCores()
-cl <- parallel::makeCluster(cores -1) #not to overload your computer
+## setup parallel back end to use many processors,  R check (cran) allows a maximum  of 2 
+
+chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+
+if (nzchar(chk) && chk == "TRUE") {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    cores <- 2L
+} else {
+    # use all cores in devtools::test()
+    cores <- parallel::detectCores() -1 #not to overload your computer
+}
+cl <- parallel::makeCluster(cores) 
 doParallel::registerDoParallel(cl)
 
 ## PARALELIZING THE CORRELATION CALCULATIONS
