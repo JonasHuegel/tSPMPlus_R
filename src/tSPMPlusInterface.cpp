@@ -30,16 +30,22 @@ std::vector<dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
   return dbMart;
 }
 
-
-
-
+//' @name createTransitiveSequences
+//' @title create Transitive Sequences
+//' @description Function to create all transitive sequences
+//' an store in binary format them to files
+//' @returns the overall number of sequences stored
+//' @param  df_dbMart The dataframe that stores the numeric data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param numOfThreads The number of threads that should be used during sequencing.
 // [[Rcpp::export]]
 size_t createTransitiveSequences(DataFrame &df_dbMart,
-                                 size_t numOfPatients,
-                                 bool storeSeqDuringCreation = false,
-                                 std::string outputDir = NULL, 
-                                 std::string outputFilePrefix = NULL,
+                                 std::string outputDir, 
+                                 std::string outputFilePrefix,
                                  int numOfThreads = 1){
+  
+  bool storeSeqDuringCreation = false;
   Rcout <<"Preparing data!\n";
   Rcout.flush();
   std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
@@ -51,7 +57,7 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
   Rcout.flush();
 
   size_t numOfCreatedSequences = extractSequencesFromArray(dbMart,
-                                                           numOfPatients,
+                                                           startPositions.size(),
                                                            startPositions.data(),
                                                            outputDir,
                                                            outputFilePrefix,
@@ -62,6 +68,26 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
   
 }
 
+//' @name tSPMPlus
+//' @title tSPMPlus
+//' @description Function to call the tSPM+ workflow, most of the other function provide by this package are wrapper functions
+//' that calls this functions with predefined parameters
+//' @returns The sequences as data frame.
+//' @param  df_dbMart The data frame that stores the data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param removeSparseSequences  Boolean parameter to control if the sparsity should be applied
+//' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
+//' @param createTemporalBuckets  Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
+//' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets
+//' @param durationSparsity  Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
+//' @param durationSparsityValue Numeric value.
+//' @param patIdLength Integer, describes the number of digits that represents a phenx in the sequence.
+//' @param returnDuration Boolean, controls if the data frame that is returns contains 
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame tSPMPlus(DataFrame &df_dbMart,
              bool storeSeqDuringCreation = false,
@@ -132,7 +158,22 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   }
   return sequenceDataFrame;
 } 
-  
+
+
+
+//' @name extractNonSparseSequences
+ //' @title extract Non Sparse Sequences
+ //' @description Extracts all non sparse transitive sequences from the data mart, after converting it to numeric.
+ //' @returns The sequences as data frame.
+ //' @param  df_dbMart The data frame that stores the data mart.
+ //' @param outputDir The path as string to the directory where the sequences should be stored.
+ //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+ //' @param numOfThreads The number of threads that should be used during sequencing.
+ //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+ //' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
+ //' @param returnDuration Boolean, controls if the data frame that is returns contains 
+ //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, eg. 30.471 for months, 364.25 for years. 
+ //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
                                       bool storeSeqDuringCreation = false,
@@ -167,6 +208,18 @@ DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
 
 }
 
+//' @name extractAllTransiviteSequences
+ //' @title Extract All Transivite Sequences
+ //' @description Function to extract all transitive sequences.
+ //' @returns The sequences as data frame.
+ //' @param  df_dbMart The data frame that stores the data mart.
+ //' @param outputDir The path as string to the directory where the sequences should be stored.
+ //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+ //' @param numOfThreads The number of threads that should be used during sequencing.
+ //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+ //' @param returnDuration Boolean, controls if the data frame that is returns contains 
+ //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+ //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
                                     bool storeSeqDuringCreation = false,
@@ -281,7 +334,18 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
   return candidates;
 }
 
-
+//' @name extractAllTransiviteSequences
+ //' @title Extract All Transivite Sequences
+ //' @description Function to extract all transitive sequences.
+ //' @returns The sequences as data frame.
+ //' @param  df_dbMart The data frame that stores the data mart.
+ //' @param outputDir The path as string to the directory where the sequences should be stored.
+ //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+ //' @param numOfThreads The number of threads that should be used during sequencing.
+ //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+ //' @param returnDuration Boolean, controls if the data frame that is returns contains 
+ //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+ //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    unsigned int bitShift,
@@ -340,7 +404,29 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
 
 }
 
-
+//' @name getCandidateSequencesForPOI
+//' @title Get Candidate Sequences For Phenx Of Interest (POI)
+//' @description Function to extract all sequences that end with phenx j, that is a end phenx for each phenx in startPhenxOfInterest.
+//' @returns The sequences as data frame.
+//' @param  df_dbMart The data frame that stores the data mart.
+//' @param minDuration the minimum duration at least one sequence from type poi->j must have, for j to be considered a candidate.
+//' @param bitShift  Integer, the number of bits used to shift the duration into sequnceID.
+//' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
+//' @param startPhenxOfInterest IntegerVector, numeric representation of the POI.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param removeSparseSequences  Boolean parameter to control if the sparsity should be applied
+//' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
+//' @param createTemporalBuckets  Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
+//' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets
+//' @param durationSparsity  Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
+//' @param durationSparsityValue Numeric value.
+//' @param patIdLength Integer, describes the number of digits that represents a phenx in the sequence.
+//' @param returnDuration Boolean, controls if the data frame that is returns contains 
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
                                        std::uint64_t minDuration,
@@ -406,16 +492,33 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
 }
 
 
+//' @name getStartPhenxFromSequence
+//' @title Get Start Phenx From Sequence
+//' @description Function to extract the start Phenx from a sequence
+//' @returns The startPhenx of a sequence
+//' @param  sequence  Integer.
+//' @param phenxLenght Integer, the length of a phenx in the sequence.
 // [[Rcpp::export]]
 unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght = 7){
   return getStartPhenx(sequence, phenxLenght);
 }
-
+//' @name getEndPhenxFromSequence
+//' @title Get End Phenx From Sequence
+//' @description Function to extract the start Phenx from a sequence
+//' @returns The startPhenx of a sequence
+//' @param  sequence  Integer.
+//' @param phenxLenght Integer, the length of a phenx in the sequence.
 // [[Rcpp::export]]
 unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght = 7){
   return getEndPhenx(sequence, phenxLenght); 
 }
-
+//' @name createSequence
+//' @title Create a sequence from toi phenx
+//' @description Function create a sequence from toi phenx.
+//' @returns Integer.
+//' @param  firstPhenx  Integer.
+//' @param  secondPhenx  Integer.
+//' @param phenxLenght Integer, the length of a phenx in the sequence.
 // [[Rcpp::export]]
 std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, unsigned int phenxLength = 7){
   return createSequence(firstPhenx, secondPhenx, phenxLength);

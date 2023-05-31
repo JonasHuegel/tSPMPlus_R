@@ -11,18 +11,16 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // createTransitiveSequences
-size_t createTransitiveSequences(DataFrame& df_dbMart, size_t numOfPatients, bool storeSeqDuringCreation, std::string outputDir, std::string outputFilePrefix, int numOfThreads);
-RcppExport SEXP _tSPMPlus_createTransitiveSequences(SEXP df_dbMartSEXP, SEXP numOfPatientsSEXP, SEXP storeSeqDuringCreationSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP) {
+size_t createTransitiveSequences(DataFrame& df_dbMart, std::string outputDir, std::string outputFilePrefix, int numOfThreads);
+RcppExport SEXP _tSPMPlus_createTransitiveSequences(SEXP df_dbMartSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame& >::type df_dbMart(df_dbMartSEXP);
-    Rcpp::traits::input_parameter< size_t >::type numOfPatients(numOfPatientsSEXP);
-    Rcpp::traits::input_parameter< bool >::type storeSeqDuringCreation(storeSeqDuringCreationSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
     Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(createTransitiveSequences(df_dbMart, numOfPatients, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads));
+    rcpp_result_gen = Rcpp::wrap(createTransitiveSequences(df_dbMart, outputDir, outputFilePrefix, numOfThreads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -188,7 +186,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tSPMPlus_createTransitiveSequences", (DL_FUNC) &_tSPMPlus_createTransitiveSequences, 6},
+    {"_tSPMPlus_createTransitiveSequences", (DL_FUNC) &_tSPMPlus_createTransitiveSequences, 4},
     {"_tSPMPlus_tSPMPlus", (DL_FUNC) &_tSPMPlus_tSPMPlus, 15},
     {"_tSPMPlus_extractNonSparseSequences", (DL_FUNC) &_tSPMPlus_extractNonSparseSequences, 9},
     {"_tSPMPlus_extractAllTransiviteSequences", (DL_FUNC) &_tSPMPlus_extractAllTransiviteSequences, 8},
