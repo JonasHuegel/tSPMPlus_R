@@ -30,10 +30,12 @@ std::vector<dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
   return dbMart;
 }
 
-//' @name createTransitiveSequences
-//' @title create Transitive Sequences
-//' @description Function to create all transitive sequences
+
+//' create all transitive Sequences
+//' 
+//' Function to create all transitive sequences
 //' an store in binary format them to files
+//' 
 //' @returns the overall number of sequences stored
 //' @param  df_dbMart The dataframe that stores the numeric data mart.
 //' @param outputDir The path as string to the directory where the sequences should be stored.
@@ -68,10 +70,12 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
   
 }
 
-//' @name tSPMPlus
-//' @title tSPMPlus
-//' @description Function to call the tSPM+ workflow, most of the other function provide by this package are wrapper functions
+
+//' tSPMPlus
+//'
+//' Function to call the tSPM+ workflow, most of the other function provide by this package are wrapper functions
 //' that calls this functions with predefined parameters
+//' 
 //' @returns The sequences as data frame.
 //' @param  df_dbMart The data frame that stores the data mart.
 //' @param outputDir The path as string to the directory where the sequences should be stored.
@@ -161,9 +165,10 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
 
 
 
-//' @name extractNonSparseSequences
-//' @title extract Non Sparse Sequences
-//' @description Extracts all non sparse transitive sequences from the data mart, after converting it to numeric.
+//' extract Non Sparse Sequences
+//'
+//' Extracts all non sparse transitive sequences from the data mart, after converting it to numeric.
+//'
 //' @returns The sequences as data frame.
 //' @param df_dbMart The data frame that stores the data mart.
 //' @param outputDir The path as string to the directory where the sequences should be stored.
@@ -208,18 +213,19 @@ DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
 
 }
 
-//' @name extractAllTransiviteSequences
- //' @title Extract All Transivite Sequences
- //' @description Function to extract all transitive sequences.
- //' @returns The sequences as data frame.
- //' @param  df_dbMart The data frame that stores the data mart.
- //' @param outputDir The path as string to the directory where the sequences should be stored.
- //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
- //' @param numOfThreads The number of threads that should be used during sequencing.
- //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
- //' @param returnDuration Boolean, controls if the data frame that is returns contains 
- //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
- //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' Extract All Transivite Sequences
+//' 
+//' Function to extract all transitive sequences.
+//' 
+//' @returns The sequences as data frame.
+//' @param  df_dbMart The data frame that stores the data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param returnDuration Boolean, controls if the data frame that is returns contains 
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
                                     bool storeSeqDuringCreation = false,
@@ -334,18 +340,21 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
   return candidates;
 }
 
-//' @name extractAllTransiviteSequences
- //' @title Extract All Transivite Sequences
- //' @description Function to extract all transitive sequences.
- //' @returns The sequences as data frame.
- //' @param  df_dbMart The data frame that stores the data mart.
- //' @param outputDir The path as string to the directory where the sequences should be stored.
- //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
- //' @param numOfThreads The number of threads that should be used during sequencing.
- //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
- //' @param returnDuration Boolean, controls if the data frame that is returns contains 
- //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
- //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+
+
+//' Get Sequences With Specific End Phenx
+//' 
+//' Function to extract all transitive sequences that end with given endPhenxs.
+//' 
+//' @returns The sequences as data frame.
+//' @param  df_dbMart The data frame that stores the data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param returnDuration Boolean, controls if the data frame that is returns contains 
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    unsigned int bitShift,
@@ -404,9 +413,11 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
 
 }
 
-//' @name getCandidateSequencesForPOI
-//' @title Get Candidate Sequences For Phenx Of Interest (POI)
-//' @description Function to extract all sequences that end with phenx j, that is a end phenx for each phenx in startPhenxOfInterest.
+
+//' Get Candidate Sequences For Phenx Of Interest (POI)
+//' 
+//' Function to extract all sequences that end with phenx j, that is a end phenx for each phenx in startPhenxOfInterest.
+//' 
 //' @returns The sequences as data frame.
 //' @param  df_dbMart The data frame that stores the data mart.
 //' @param minDuration the minimum duration at least one sequence from type poi->j must have, for j to be considered a candidate.
@@ -493,9 +504,11 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
 }
 
 
-//' @name getStartPhenxFromSequence
-//' @title Get Start Phenx From Sequence
-//' @description Function to extract the start Phenx from a sequence
+
+//' Get Start Phenx From Sequence
+//' 
+//' Function to extract the start Phenx from a sequence
+//' 
 //' @returns The startPhenx of a sequence
 //' @param  sequence  Integer.
 //' @param phenxLenght Integer, the length of a phenx in the sequence.
@@ -503,9 +516,11 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
 unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght = 7){
   return getStartPhenx(sequence, phenxLenght);
 }
-//' @name getEndPhenxFromSequence
-//' @title Get End Phenx From Sequence
-//' @description Function to extract the start Phenx from a sequence
+
+//' Get End Phenx From Sequence
+//' 
+//' Function to extract the start Phenx from a sequence
+//' 
 //' @returns The startPhenx of a sequence
 //' @param  sequence  Integer.
 //' @param phenxLenght Integer, the length of a phenx in the sequence.
@@ -513,9 +528,12 @@ unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phen
 unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght = 7){
   return getEndPhenx(sequence, phenxLenght); 
 }
-//' @name createSequence
-//' @title Create a sequence from toi phenx
-//' @description Function create a sequence from toi phenx.
+
+
+//' Create a sequence from toi phenx
+//' 
+//' Function create a sequence from toi phenx.
+//' 
 //' @returns Integer.
 //' @param  firstPhenx  Integer.
 //' @param  secondPhenx  Integer.
