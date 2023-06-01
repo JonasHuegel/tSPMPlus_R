@@ -1,0 +1,9 @@
+RCPP_PARALLEL_LIBS=`"${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()"
+RCPP_PARALLEL_LIBS= "echo" " -latomic"`
+RCPP_PARALLEL_CXXFLAGS=`"echo" "-DRCPP_PARALLEL_USE_TBB=1"`
+TSPMPLUS_CXXFLAGS=`"echo" "-lpthread -lstdc++fs"`
+
+sed -e "s|@RCPP_PARALLEL_LIBS@|${RCPP_PARALLEL_LIBS}|" \
+    -e "s|@RCPP_PARALLEL_CXXFLAGS@|${RCPP_PARALLEL_CXXFLAGS}|" \
+    -e "s|@TSPMPLUS_CXXFLAGS@|${TSPMPLUS_CXXFLAGS}|" \
+    src/Makevars.in > src/Makevars.win
