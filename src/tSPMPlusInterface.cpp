@@ -91,8 +91,8 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
 // [[Rcpp::export]]
 DataFrame tSPMPlus(DataFrame &df_dbMart,
              bool storeSeqDuringCreation = false,
-             std::string outputDir = NULL,
-             std::string outputFilePrefix = NULL,
+             std::string outputDir = "",
+             std::string outputFilePrefix = "",
              int numOfThreads = 1,
              bool removeSparseSequences = true,
              double sparsityValue = 0.05,
@@ -162,23 +162,23 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
 
 
 //' @name extractNonSparseSequences
- //' @title extract Non Sparse Sequences
- //' @description Extracts all non sparse transitive sequences from the data mart, after converting it to numeric.
- //' @returns The sequences as data frame.
- //' @param  df_dbMart The data frame that stores the data mart.
- //' @param outputDir The path as string to the directory where the sequences should be stored.
- //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
- //' @param numOfThreads The number of threads that should be used during sequencing.
- //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
- //' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
- //' @param returnDuration Boolean, controls if the data frame that is returns contains 
- //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, eg. 30.471 for months, 364.25 for years. 
- //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @title extract Non Sparse Sequences
+//' @description Extracts all non sparse transitive sequences from the data mart, after converting it to numeric.
+//' @returns The sequences as data frame.
+//' @param df_dbMart The data frame that stores the data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
+//' @param returnDuration Boolean, controls if the data frame that is returns contains 
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, eg. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
 // [[Rcpp::export]]
 DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
                                       bool storeSeqDuringCreation = false,
-                                      std::string outputDir = NULL,
-                                      std::string outputFilePrefix = NULL,
+                                      std::string outputDir = "",
+                                      std::string outputFilePrefix = "",
                                       double sparsityValue = 0.05,
                                       int numOfThreads = 1,
                                       bool returnDuration = true,
@@ -223,8 +223,8 @@ DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
 // [[Rcpp::export]]
 DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
                                     bool storeSeqDuringCreation = false,
-                                    std::string outputDir = NULL,
-                                    std::string outputFilePrefix = NULL,
+                                    std::string outputDir = "",
+                                    std::string outputFilePrefix = "",
                                     int numOfThreads = 1,
                                     bool returnDuration = true,
                                     double durationPeriods = 30.437,
@@ -355,8 +355,8 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    bool includeCorBuckets = false,
                                    std::uint64_t minDuration = 0,
                                    bool storeSeqDuringCreation = false,
-                                   std::string outputDir = NULL,
-                                   std::string outputFilePrefix = NULL,
+                                   std::string outputDir = "",
+                                   std::string outputFilePrefix = "",
                                    int numOfThreads = 1,
                                    bool removeSparseSequences = true,
                                    double sparsityValue = 0.05,
@@ -427,6 +427,7 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
 //' @param returnDuration Boolean, controls if the data frame that is returns contains 
 //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
 //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @example{}
 // [[Rcpp::export]]
 DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
                                        std::uint64_t minDuration,
@@ -435,8 +436,8 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
                                        IntegerVector &lowerBucketThresholds,
                                        IntegerVector &startPhenxOfInterrest,
                                        bool storeSeqDuringCreation = false,
-                                       std::string outputDir = NULL,
-                                       std::string outputFilePrefix = NULL,
+                                       std::string outputDir = "",
+                                       std::string outputFilePrefix = "",
                                        int numOfThreads = 1,
                                        bool removeSparseSequences = true,
                                        double sparsityValue = 0.05,

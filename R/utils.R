@@ -1,10 +1,12 @@
+utils::globalVariables(c("num_pat_num","%>%","num_Phenx", "start_date"))
+
 #'@title Transforms an alphanumeric data frame to a numeric one
 #'@description Transforms an alphanumeric data frame to a numeric one and returns it together with the look up tables for the patient id and phenx. 
 #'@param dbmart The alpha numeric dbmart that should be converted.
 #'@returns A list of data frames containing the numeric datamart and the patient id and phenx look up tables.
 #'
 transformDbMartToNumeric<- function(dbmart){
-
+  
   patient_num <- c(unique(dbmart$patient_num))
   
   patLookUp <- as.data.frame(patient_num)
