@@ -118,8 +118,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // getCandidateSequencesForPOI
-DataFrame getCandidateSequencesForPOI(DataFrame& df_dbMart, std::uint64_t minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterrest, bool storeSeqDuringCreation, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, double durationPeriods, unsigned int daysForCoOoccurence);
-RcppExport SEXP _tSPMPlus_getCandidateSequencesForPOI(SEXP df_dbMartSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterrestSEXP, SEXP storeSeqDuringCreationSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP) {
+DataFrame getCandidateSequencesForPOI(DataFrame& df_dbMart, std::uint64_t minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterest, bool storeSeqDuringCreation, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, double durationPeriods, unsigned int daysForCoOoccurence);
+RcppExport SEXP _tSPMPlus_getCandidateSequencesForPOI(SEXP df_dbMartSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterestSEXP, SEXP storeSeqDuringCreationSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -128,7 +128,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type bitShift(bitShiftSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type lengthOfPhenx(lengthOfPhenxSEXP);
     Rcpp::traits::input_parameter< IntegerVector& >::type lowerBucketThresholds(lowerBucketThresholdsSEXP);
-    Rcpp::traits::input_parameter< IntegerVector& >::type startPhenxOfInterrest(startPhenxOfInterrestSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type startPhenxOfInterest(startPhenxOfInterestSEXP);
     Rcpp::traits::input_parameter< bool >::type storeSeqDuringCreation(storeSeqDuringCreationSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
     Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
@@ -143,31 +143,31 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type returnDuration(returnDurationSEXP);
     Rcpp::traits::input_parameter< double >::type durationPeriods(durationPeriodsSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type daysForCoOoccurence(daysForCoOoccurenceSEXP);
-    rcpp_result_gen = Rcpp::wrap(getCandidateSequencesForPOI(df_dbMart, minDuration, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenxOfInterrest, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence));
+    rcpp_result_gen = Rcpp::wrap(getCandidateSequencesForPOI(df_dbMart, minDuration, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenxOfInterest, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence));
     return rcpp_result_gen;
 END_RCPP
 }
 // getStartPhenxFromSequence
-unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght);
-RcppExport SEXP _tSPMPlus_getStartPhenxFromSequence(SEXP sequenceSEXP, SEXP phenxLenghtSEXP) {
+unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLength);
+RcppExport SEXP _tSPMPlus_getStartPhenxFromSequence(SEXP sequenceSEXP, SEXP phenxLengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::uint64_t >::type sequence(sequenceSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type phenxLenght(phenxLenghtSEXP);
-    rcpp_result_gen = Rcpp::wrap(getStartPhenxFromSequence(sequence, phenxLenght));
+    Rcpp::traits::input_parameter< unsigned int >::type phenxLength(phenxLengthSEXP);
+    rcpp_result_gen = Rcpp::wrap(getStartPhenxFromSequence(sequence, phenxLength));
     return rcpp_result_gen;
 END_RCPP
 }
 // getEndPhenxFromSequence
-unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLenght);
-RcppExport SEXP _tSPMPlus_getEndPhenxFromSequence(SEXP sequenceSEXP, SEXP phenxLenghtSEXP) {
+unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLength);
+RcppExport SEXP _tSPMPlus_getEndPhenxFromSequence(SEXP sequenceSEXP, SEXP phenxLengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::uint64_t >::type sequence(sequenceSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type phenxLenght(phenxLenghtSEXP);
-    rcpp_result_gen = Rcpp::wrap(getEndPhenxFromSequence(sequence, phenxLenght));
+    Rcpp::traits::input_parameter< unsigned int >::type phenxLength(phenxLengthSEXP);
+    rcpp_result_gen = Rcpp::wrap(getEndPhenxFromSequence(sequence, phenxLength));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -15,3 +15,5 @@ Suggests: knitr, rmarkdown, pacman,mlho, devtools, backports, Hmisc, ggplot2, pl
 LinkingTo: Rcpp, RcppParallel
 LazyData: true
 VignetteBuilder: knitr, rmarkdown
+RoxygenNote: 7.2.3
+Encoding: UTF-8
