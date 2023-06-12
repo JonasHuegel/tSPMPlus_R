@@ -9,21 +9,21 @@
 using namespace Rcpp;
 
 
-std::vector<dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
+std::vector<tspm::dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
   IntegerVector patientIds = dfDbMart[0];
   IntegerVector phenxIds = dfDbMart[1];
   DateVector startDates = dfDbMart[2];
   size_t numOfEntries = dfDbMart.nrows();
   Rcout<<"numOfEntries: " << numOfEntries <<"\n";
   Rcout.flush();
-  std::vector<dbMartEntry> dbMart;
+  std::vector<tspm::dbMartEntry> dbMart;
   dbMart.reserve(numOfEntries);
   
   for(size_t i = 0; i < numOfEntries; ++i){
-    dbMartEntry entry;
+    tspm::dbMartEntry entry;
     entry.patID = patientIds[i];
     entry.phenID = phenxIds[i];
-    entry.date = getTimeFromString(((Date)startDates[i]).format().c_str());
+    entry.date = tspm::getTimeFromString(((Date)startDates[i]).format().c_str());
     dbMart.emplace_back(entry);
   }
   return dbMart;
@@ -49,11 +49,11 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
   bool storeSeqDuringCreation = false;
   Rcout <<"Preparing data!\n";
   Rcout.flush();
-  std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+  std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
   
   Rcout <<"determine start positions!\n";
   Rcout.flush();
-  std::vector<size_t> startPositions = extractStartPositions(dbMart);
+  std::vector<size_t> startPositions = tspm::extractStartPositions(dbMart);
   Rcout<< "Creating sequences!\n";
   Rcout.flush();
 
@@ -113,10 +113,10 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   }
   Rcout <<"Preparing data!\n";
   Rcout.flush();
-  std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+  std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
   Rcout <<"Data prepared!\n";
   Rcout.flush();
-  std::vector<temporalSequence> sequences =  sequenceWorkflow(dbMart,
+  std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
                                                               storeSeqDuringCreation,
                                                               outputDir,
                                                               outputFilePrefix,
@@ -143,7 +143,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
     durations.reserve(sequences.size());
   }
   
-  for(temporalSequence seq: sequences){
+  for(tspm::temporalSequence seq: sequences){
     int patId = seq.patientID;
     std::int64_t seqId = seq.seqID;
     unsigned int duration = seq.duration;
@@ -259,7 +259,7 @@ DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
   
 }
 
-std::vector<temporalSequence> extractCandidatesSequences(std::vector<temporalSequence> &originalSequences,
+std::vector<tspm::temporalSequence> extractCandidatesSequences(std::vector<tspm::temporalSequence> &originalSequences,
                                     std::uint64_t minDuration, unsigned int bitShift,
                                     unsigned int lengthOfPhenx, unsigned int numOfBuckets,
                                     std::vector<unsigned int> lowerBucketThresholds,
@@ -277,7 +277,7 @@ std::vector<temporalSequence> extractCandidatesSequences(std::vector<temporalSeq
   Rcout<<"Extracted CandidatePhenx: " << candidateEndPhenx.size() << std::endl;
   Rcout.flush();
   
-  std::vector<temporalSequence> sequencesOfInterest;
+  std::vector<tspm::temporalSequence> sequencesOfInterest;
   sequencesOfInterest = extractSequencesWithEnd(originalSequences,
                                                 bitShift,
                                                 lengthOfPhenx,
@@ -291,7 +291,7 @@ std::vector<temporalSequence> extractCandidatesSequences(std::vector<temporalSeq
 
 
 
-DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequencesOfInterest,
+DataFrame transformToCandidateDataFrame(std::vector<tspm::temporalSequence> &sequencesOfInterest,
                                         std::vector<unsigned int> lowerBucketThresholds,
                                         unsigned int lengthOfPhenx){
   
@@ -302,7 +302,7 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
   std::vector<unsigned int> durations;
   durations.reserve(sequencesOfInterest.size());
   
-  for(temporalSequence seq : sequencesOfInterest){
+  for(tspm::temporalSequence seq : sequencesOfInterest){
     int patId = seq.patientID;
     std::uint64_t seqId = seq.seqID;
     int duration = seq.duration;
@@ -319,12 +319,12 @@ DataFrame transformToCandidateDataFrame(std::vector<temporalSequence> &sequences
   std::vector<unsigned int> durationBuckets;
   durationBuckets.reserve(patIDs.size());
   for(size_t i = 0; i < patIDs.size();++i){
-    temporalSequence seq;
+    tspm::temporalSequence seq;
     seq.seqID = seqIDs[i];
 
     unsigned int duration = durations[i];
     unsigned int endPhenx = getEndPhenx(seq, lengthOfPhenx);
-    unsigned int durationBucket = getCandidateBucket(duration, lowerBucketThresholds);
+    unsigned int durationBucket = tspm::getCandidateBucket(duration, lowerBucketThresholds);
 
     endPhenxVector.emplace_back(endPhenx);
     durationBuckets.emplace_back(durationBucket);
@@ -396,10 +396,10 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
   }
   Rcout <<"Preparing data!\n";
   Rcout.flush();
-  std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+  std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
   Rcout <<"Data prepared!\n";
   Rcout.flush();
-  std::vector<temporalSequence> sequences =  sequenceWorkflow(dbMart,
+  std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
                                                               storeSeqDuringCreation,
                                                               outputDir,
                                                               outputFilePrefix,
@@ -418,7 +418,7 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
   
   std::set<unsigned int > endPhenxSet;
   endPhenxSet.insert(endPhenx.begin(), endPhenx.end());
-  sequences = extractSequencesWithEnd(sequences, bitShift, lengthOfPhenx, endPhenxSet, numOfThreads);
+  sequences = tspm::extractSequencesWithEnd(sequences, bitShift, lengthOfPhenx, endPhenxSet, numOfThreads);
   Rcout<< sequences.size() << std::endl;
   Rcout.flush();
   return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
@@ -479,10 +479,10 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
   }
   Rcout <<"Preparing data!\n";
   Rcout.flush();
-  std::vector<dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+  std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
   Rcout <<"Data prepared!\n";
   Rcout.flush();
-  std::vector<temporalSequence> sequences =  sequenceWorkflow(dbMart,
+  std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
                                                               storeSeqDuringCreation,
                                                               outputDir,
                                                               outputFilePrefix,
@@ -500,7 +500,7 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
   
   Rcout << "Reached sequenceofInterest" << std::endl;
   Rcout.flush();
-  std::vector<temporalSequence> sequencesOfInterest = extractCandidatesSequences(sequences,
+  std::vector<tspm::temporalSequence> sequencesOfInterest = extractCandidatesSequences(sequences,
                                                                                  minDuration,
                                                                                  bitShift,
                                                                                  lengthOfPhenx,
@@ -526,7 +526,7 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
 // [[Rcpp::export]]
 unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLength = 7){
-  return getStartPhenx(sequence, phenxLength);
+  return tspm::getStartPhenx(sequence, phenxLength);
 }
 
 //' Get End Phenx From Sequence
@@ -538,7 +538,7 @@ unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phen
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
 // [[Rcpp::export]]
 unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLength = 7){
-  return getEndPhenx(sequence, phenxLength); 
+  return tspm::getEndPhenx(sequence, phenxLength); 
 }
 
 
@@ -552,5 +552,5 @@ unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxL
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
 // [[Rcpp::export]]
 std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, unsigned int phenxLength = 7){
-  return createSequence(firstPhenx, secondPhenx, phenxLength);
+  return tspm::createSequence(firstPhenx, secondPhenx, phenxLength);
 }
