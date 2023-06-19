@@ -148,7 +148,7 @@ dat.train <- MSMSR.lite(MLHO.dat=dat.train,
                         sparsity = NA, 
                         labels = labeldt,
                         topn = 200,
-                        multicore = TRUE)
+                        multicore = FALSE)
 ```
 
 Notice that we are removing concepts that had prevalence less than 0.5% and then only taking the top 200 after the JMI rankings. See help (`?mlho::MSMSR.lite`) for `MSMR.lite` parameters.
@@ -178,7 +178,7 @@ model.test <- mlearn(dat.train,
                    cv="cv",
                    nfold=5,
                    aoi="prediabetes",
-                   multicore= TRUE)
+                   multicore= FALSE)
 ```
 
 Try `?mlho::mlearn` to learn more about `mlearn` parameters. You can select a variety of models. For binray classification tasks, chose from:ORFlog, RRF,gbm,bayesglm,regLogistic,xgbDART,regLogistic, glmnet, bayesglm, nb, svmRadialWeights,avNNet,and ordinalRF. see the list and description of all available [models](https://rdrr.io/cran/caret/man/models.html)
