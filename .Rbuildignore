@@ -3,3 +3,4 @@
 .RDataTmp
 src/tspm_cpp_backend/.git
 out/
+vignettes/

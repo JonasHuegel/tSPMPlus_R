@@ -1,7 +1,7 @@
 Package: tSPMPlus
 Type: Package
 Title: transitive Sequence Pattern Mining for EHR records 
-Version: 0.03.004
+Version: 0.03.005
 Date: 2023-06-11
 Author: Jonas Huegel, Hossein Estiri
 Maintainer: Jonas Huegel <jhuegel@mgh.harvard.edu>

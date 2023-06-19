@@ -414,7 +414,7 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                                               numOfThreads);
   
 
-  
+  ips4o::parallel::sort(sequences.begin(), sequences.end(),tspm::timedSequencesSorter, numOfThreads);
   std::set<unsigned int > endPhenxSet;
   endPhenxSet.insert(endPhenx.begin(), endPhenx.end());
   sequences = tspm::extractSequencesWithEnd(sequences, bitShift, lengthOfPhenx, endPhenxSet, numOfThreads);
