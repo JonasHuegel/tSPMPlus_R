@@ -57,9 +57,8 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
   Rcout<< "Creating sequences!\n";
   Rcout.flush();
 
-  size_t numOfCreatedSequences = extractSequencesFromArray(dbMart,
-                                                           startPositions.size(),
-                                                           startPositions.data(),
+  size_t numOfCreatedSequences = tspm::writeSequencesFromArrayToFile(dbMart,
+                                                           startPositions,
                                                            outputDir,
                                                            outputFilePrefix,
                                                            7,
