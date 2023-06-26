@@ -622,7 +622,7 @@ DataFrame sequenceAndSummarize(DataFrame df_dbMart,
                                                                           patIdLength,
                                                                           numOfThreads);
   
-  std::vector<std::pair<std::pair<uint64_t, size_t>, size_t>> summary =
+  std::vector<std::pair<tspm::temporalSequence, size_t>> summary =
     tspm::summarizeSequencesAsVector(sequences,
                                      includeDurations,
                                      as<std::vector<unsigned int>>(lowerBucketThreshold),
@@ -636,12 +636,12 @@ DataFrame sequenceAndSummarize(DataFrame df_dbMart,
   std::vector<std::uint64_t> durationBuckets;
   durationBuckets.reserve(summary.size());
   
-  for(std::pair<std::pair<uint64_t, size_t>, size_t> entry: summary){
-    std::uint64_t seq = entry.first.first;
+  for(std::pair<tspm::temporalSequence, size_t> entry: summary){
+    std::uint64_t seq = entry.first.seqID;
     seqIDs.emplace_back(seq);
     
     if(includeDurations){
-      std::uint32_t dur = entry.first.second;
+      std::uint32_t dur = entry.first.duration;
       durationBuckets.emplace_back(dur);
     }
     counts.emplace_back(entry.second);
