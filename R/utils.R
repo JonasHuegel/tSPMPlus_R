@@ -43,3 +43,79 @@ transformDbMartToNumeric<- function(dbmart){
   
   return (out)
 }
+
+#'@title Split a numeric dbMart in multiple chunks that can be sequenced
+#'@description Split a numeric dbMart in multiple chunks that can be sequenced. This function should be used if the original numeric dbmart contains to many entries. 
+#'Either due to memory limitation or the that the number of sequences is larger than 2**31-1, which is the maximum of entries in an R vector.
+#'@param dbmart_num The numeric dbmart that should be splitt in chunks.
+#'@param includeCorSeq A boolean parameter, should be true if the corseq flag will be set to true during sequencing. Default is false!
+#'@returns A list of 2 list. The first list contains the dbmart chunks, the second one contains the look up tables to translate the chunk-patnum to one from the orignal dbmart.
+#'
+splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE){
+  uniquePatients <-unique(dbmart_num$num_pat_num)
+  entriesPerPatient <- count(dbmart_num$num_pat_num)
+  dbmartEntrySizeInCPP <- 16
+  sequenceSizeInCPP <- 16
+  uint64_max <- 2**(64)-1
+  uint32_max <- 2**(32)-1
+  sequencesSizeInR <- 2 * as.numeric(object.size(unit32_max)) + as.numeric(object.size(uint64_max))
+  if(includeCorSeq == TRUE){
+    sequencesSizeInR <- sequencesSizeInR + 2 * as.numeric(object.size(uint32_max))
+  }
+
+  entriesPerPatient <- entriesPerPatient %>% dplyr::mutate(seqs = (freq*(freq-1))/2)
+  entriesPerPatient$seqs <- as.numeric(entriesPerPatient$seqs)
+  entriesPerPatient <- entriesPerPatient %>% dplyr::mutate(mem = freq*dbmartEntrySizeInCPP + seqs*sequenceSizeInCPP + seqs*sequencesSizeInR)
+  
+  availMem <- as.numeric(memuse::Sys.meminfo()$freeram)
+  dbMartSize <- as.numeric(object.size(dbmart_num))
+  # subtract additional 10 MB as buffer
+  availMem <- availMem - dbMartSize - 1024*1024*10
+  
+  memInChunk <- 0
+  firstEntryInChunk <- c(0)
+  pat <-0
+  seqCount <- 0
+  maxSeqCount <- 2**31-1
+  #calculate chunk sizes
+  for(pat in uniquePatients){
+    pat <- pat+1 #(pats are starting with 0 for c++ so add one to use it )
+    memInChunk <- memInChunk + entriesPerPatient$mem[pat]
+    seqCount <- seqCount + entriesPerPatient$mem[pat]
+    if(memInChunk >= availMem ||seqCount >= maxSeqCount){
+      if(entriesPerPatient$mem[pat] > availMem || entriesPerPatient$mem[pat]> maxSeqCount){
+        stop(paste0("Cannont split the dbMart in adaptive chunks, the required memory for one Patient exceeds the available memory! To much memory required for patient: ", pat-1))
+      }
+      firstEntryInChunk <- c(firstEntryInChunk, pat-1)
+      memInChunk <-entriesPerPatient$mem[pat]
+      seqCount <- entriesPerPatient$mem[pat]
+    }
+  }
+  
+  # chop chop
+  chunks<- list()
+  chunks$chunks <-list()
+  chunks$lookUps <- list()
+  for(i in 1:length(firstEntryInChunk)){
+    start <- firstEntryInChunk[i];
+    if(i < length(firstEntryInChunk)){
+      stop <-firstEntryInChunk[i+1]
+    }else{
+      stop <- nrow(dbmart_num)
+    }
+
+    chunk <- dbmart_num %>% filter(dbmart_num$num_pat_num >= start & dbmart_num$num_pat_num < stop)
+
+    patientsInChunk <- c(unique(chunk$num_pat_num))
+    
+    chunkLookUp <- as.data.frame(patientsInChunk)
+    colnames(chunkLookUp) <- c("num_pat_num")
+    setDT(chunkLookUp)
+    
+    chunkLookUp[,chunk_pat_num := .I]
+    chunkLookUp <- chunkLookUp %>% dplyr::mutate(chunk_pat_num = chunk_pat_num -1)
+    chunks$chunks <- append(chunks$chunks, list(chunk %>% dplyr::left_join(chunkLookUp, by="num_pat_num") %>% select(num_pat_num=chunk_pat_num, num_Phenx, start_date)))
+    chunks$lookUps <- append(chunks$lookUps, list(chunkLookUp))
+  }  
+  return(chunks)
+}

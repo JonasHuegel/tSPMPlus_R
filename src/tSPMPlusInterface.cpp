@@ -9,6 +9,12 @@
 using namespace Rcpp;
 
 
+//' transform the dbmart data frame to c++ structure
+//' Function to create all transitive sequences
+//' an store in binary format them to files.
+//' 
+//' @returns dbMart as c++ struct
+//' @param  df_dbMart The dataframe that stores the numeric data mart.
 std::vector<tspm::dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
   IntegerVector patientIds = dfDbMart[0];
   IntegerVector phenxIds = dfDbMart[1];
@@ -414,7 +420,7 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                                               numOfThreads);
   
 
-  
+  ips4o::parallel::sort(sequences.begin(), sequences.end(),tspm::timedSequencesSorter, numOfThreads);
   std::set<unsigned int > endPhenxSet;
   endPhenxSet.insert(endPhenx.begin(), endPhenx.end());
   sequences = tspm::extractSequencesWithEnd(sequences, bitShift, lengthOfPhenx, endPhenxSet, numOfThreads);

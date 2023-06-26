@@ -1,7 +1,7 @@
 ---
 title: "Implementing the WHO Long covid Definition utilizing tSPM+"
 author: "Jonas Hügel & Hossein Estiri"
-date: "May 22, 2023"
+date: "June 22, 2023"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Implementing the WHO Long covid Definition utilizing tSPM+}
@@ -11,19 +11,19 @@ vignette: >
 
 In this vignette, we will explore how we can use the tSPM+ package to identify possible long covid patients and their symptoms. Therefore we will at first extract (long covid) candidate sequences according to the WHO definition. The WHO definition requires 2 important factors for a symptom to be long covid:
 
-  * the patient must had covid 3 months ago,
+  * the patient must had covid,
   * and the symptoms are ongoing for at least 2 months and can not explained by other conditions
 
 ## Defintions of candidates
-We call a condition a weak candidate for a patient, if a sequence exists that starts with covid, end with that condition and has a duration >3 months.
-We call a condition a candidate for a patient, if we have another sequence that starts with covid and ends with that condition, which has a duration of min(j) + 2 months
+We call a condition a weak candidate for a patient, if a sequence exists that starts with covid, end with that condition.
+We call a condition a candidate for a patient, if we have another sequence that starts with covid and ends with that condition, which has a duration of min(j) + 2 months.
 
 ## Our Approach:
 1) Identify possible weak candidates,
 2) Identify possible candidates from the weak candidates
 3) extract all sequences that end with a candidate
-4) calculate pairwise correlation between the `startPhenx` and the tuple `(candidate, duration Bucket)`
-5) exclude candidates that have sequences with a high correlation with another startPhenx and the tuple `(candidate, duration Bucket)`
+4) calculate pairwise correlation between all `startPhenx` and the tuple `(candidate, duration Bucket)`
+5) exclude candidates for a patient that have sequences with a high correlation with another startPhenx and the tuple `(candidate, duration Bucket)`
 
 
 ```{r setup, include = FALSE}
@@ -62,20 +62,19 @@ In this example, we are using the example data  from the [`syntheticmass covid d
 
 
 
-
-
 The dbmart consist of 4 rows, the patient number (`patient_num`), the phenx (`phenx`), the corresponding description for the phenx (`description`) and last but not least the date when the phenx was recorded (`start_date`).
 Lets load the table and take a look at it.
 
 ```{r load data}
 ## load the data
-load("../data/dbmart-covid19.Rda")
+# load("../data/dbmart-covid19.Rda")
+dbmart <- tSPMPlus::dbmart
 ## lets glance at the data frame
 head(dbmart)
 ```
 ```{r remove height and weight only with observations, include = FALSE}
 ## Lets remove Body Height & Body Weight	
-dbmart <- subset(dbmart,!(dbmart$description %in% c("Body Height","Body Weight")))
+#dbmart <- subset(dbmart,!(dbmart$description %in% c("Body Height","Body Weight")))
 ```
 tSPM+ requires that we use numeric identifiers for the patient number as well as for the identifier of the data mart entries (phenx). Calling the `transformDbMartToNumeric` function will create numeric ids (starting by zero and counting up wards) for the patient numbers and phenx. We split the data set in cases and control. Cases are patients with covid, control without. 
 
@@ -102,31 +101,31 @@ The `tSPM+` package provides multiple functions to extract temporal sequences. E
 ```{r call tSPM+ and extract weak candidates}
 ## define function parameters
 
-## extract the numeric representation for `COVID-19`
+## extract the numeric representation for `COVID-19` it is also possible to handover multiple values in a vector
 phenxOfInterestCode <- as.numeric(dbmart[(description=="COVID-19"),phenx])[1]
 phenxOfInterest <- dbMart$phenxLookUp[(phenx==phenxOfInterestCode),num_Phenx]
 
-outDir = "" ## set a valid path if you want to store all the plain sequences to a binary file during the creation 
-outputFilePrefix = "" ## set a prefix for each patient sequence file to recognize the corresponding run easier 
 storeSequencesDuringCreation = FALSE ## set to true if you want to store all the plain sequences to a file during the creation 
 sparsity = 0.05
 numOfThreads = detectCores() ## number of Threads used for parralelisation
 temporalBucket =  c(0,1,3) ## the lower thresholds in months for the duration buckets
-minDuration = 0
+minDuration = 3
 bitShift = 0 ## technical parameter
 lengthOfPhenx = 7 ## technical parameter
-sparsity = 0.05 ## sparsity value to reduce the number of created transitive sequences, default parameter
+sparsity = 0.005 ## sparsity value to reduce the number of created transitive sequences, default parameter
 
 ## call the function
 corseq <- tSPMPlus::getCandidateSequencesForPOI(dbmart_cases, minDuration, bitShift, lengthOfPhenx,
                                                 temporalBucket, phenxOfInterest, storeSequencesDuringCreation,
-                                                outDir, outputFilePrefix, numOfThreads, sparsityValue = sparsity)
+                                                numOfThreads = numOfThreads, sparsityValue = sparsity)
 ```
 
 If we take a look at the `corseq` data frame, we will see that it consists of five columns. One for the patient Id, one for the sequence and for the duration (time diff between the two phenx of the sequence). The sequences are stored as numbers and but are human readable and interpretable. A sequence consists of the both numeric ids of it phenx, where the second sequence was filled with leading 0 up to seven digits. In our example the first non sparse sequence for `patient 0` is `1380000138` and consist of the both phenx with the id `138`. If we want to get the description of the corresponding phenx, we first need to look up the corresponding alphanumeric value ID in `dbMart$phenxLookUp`, before we can extract the corresponding description from the original dbmart.
 We can now  see how the sequence is constructed. For the sequence `phenx_1 = 0` -> `phenx_2 = 4`, the sequence starts with `phenx_1`. Afterwards, we append `phenx_2` filled up with so many leading `0` that we have a length of `lengthOfPhenx = 7` for `phenx_2`. Ending up with `00000004` as the numeric representaion for the sequence.
 
 ```{r view sequences}
+#remove duplicates if they exist
+corseq <- dplyr::distinct(corseq, .keep_all = TRUE)
 head(corseq)
 ```
 
@@ -138,11 +137,19 @@ The `corseq` data frame contains all sequences that ends with a phenx that is we
 ## extract candidate sequences from corseq data frame
 J <- data.frame(unique(corseq$endPhenx))
 colnames(J) <- "endPhenx"
-J$candidate_sequences <- ifelse(J$endPhenx<10,paste0(phenxOfInterest,"000000",J$endPhenx),NA)
-J$candidate_sequences <- ifelse(J$endPhenx<100 & J$endPhenx>9,paste0(phenxOfInterest,"00000",J$endPhenx), J$candidate_sequences )
-J$candidate_sequences <- ifelse(J$endPhenx<1000 & J$endPhenx>99,paste0(phenxOfInterest,"0000",J$endPhenx), J$candidate_sequences)
+Js <- list()
+for(j in 1:length(phenxOfInterest)) {
+Js.j <- J
+  
+Js.j$candidate_sequences <- ifelse(Js.j$endPhenx<10,paste0(phenxOfInterest[j],"000000",Js.j$endPhenx),NA)
+Js.j$candidate_sequences <- ifelse(Js.j$endPhenx<100 & Js.j$endPhenx>9,paste0(phenxOfInterest[j],"00000",Js.j$endPhenx),Js.j$candidate_sequences)
+Js.j$candidate_sequences <- ifelse(Js.j$endPhenx<1000 & Js.j$endPhenx>99,paste0(phenxOfInterest[j],"0000",Js.j$endPhenx),Js.j$candidate_sequences)
 
+Js[[j]] <- Js.j
+}
+J <- data.table::rbindlist(Js)
 J$candidate_sequences <- as.numeric(J$candidate_sequences)
+rm(Js,Js.j)
 ```
 Now we need to shrink the `corseq` dataframe so that it only contains candidate sequences.
 
@@ -150,16 +157,9 @@ Now we need to shrink the `corseq` dataframe so that it only contains candidate 
 ## reduce corseq so that it contains only weak canidates
 corseq_sub <- subset(corseq,corseq$sequence %in% J$candidate_sequences)
 ```
-Now we remove all possible candidate sequences that have duration < 3 months. This results in a list of all weak candidates.
-```{r apply weak candidate condition}
-## since the tSPM+ functions returns all sequences that end with a possible candidate, we need to remove every sequence with a length <3 (months)
-corseq_sub <- subset(corseq_sub,corseq_sub$duration >= 3)
 
-## we might have duplicate sequences, so lets remove duplicates
-corseq_sub <- dplyr::distinct(corseq_sub, .keep_all = TRUE)
-
-```
 The long covid definition requires that a condition is ongoing for 2 months. In our data this is the case if a candidate sequence occurs at least twice and, and the duration of one the later sequence is two or more months longer than the minimum duration for this sequence for the patient.
+Since a patient might have a multiple covid infections with differen long covid symptoms, we iterating ofer the infections
 Lets start with removing every sequence for a patient that is not at least appearing twice for that patient. Afterwards we apply the sparsity screening again.
 ```{r remove sequences that occur only once, warning=FALSE}
 
@@ -248,9 +248,7 @@ corseq <- tSPMPlus::getSequencesWithEndPhenx(dbmart_num,
                                              includeCorBuckets=TRUE,
                                              minDuration,
                                              storeSequencesDuringCreation,
-                                             outDir,
-                                             outputFilePrefix,
-                                             numOfThreads,
+                                             numOfThreads = numOfThreads,
                                              sparsityValue=sparsity)
 corseq <- dplyr::distinct(corseq, .keep_all = TRUE)
 
@@ -338,6 +336,7 @@ corrs <- foreach(j = 1:length(end),#
                  }
 
 corrs <- merge(corrs,dbMart$phenxLookUp,by.x = "endPhenx",by.y ="num_Phenx" )
+##end of corrs.R script
 
 ``` 
 
@@ -353,9 +352,7 @@ corseq <- tSPMPlus::getSequencesWithEndPhenx(dbmart_cases,
                                              includeCorBuckets=TRUE,
                                              minDuration,
                                              storeSequencesDuringCreation,
-                                             outDir,
-                                             outputFilePrefix,
-                                             numOfThreads,
+                                             numOfThreads = numOfThreads,
                                              sparsityValue=sparsity)
 corseq <- dplyr::distinct(corseq, .keep_all = TRUE)
 
@@ -452,7 +449,7 @@ corseq <- subset(corseq,!(corseq$pat_endPhenx %in% exclusion3))
 
 ## now incorporating correlations
 
-exlusion_corrs <- subset(corrs,corrs$p.value <= 0.005 & corrs$rho.abs > 0.9)
+exlusion_corrs <- subset(corrs,corrs$p.value <= 0.005 & corrs$rho.abs > 0.6)
 
 ### J->J sequences
 # we will only remove Js when J->J with longer than 3 months is significant and also the patient has a J-->COVID sequence
