@@ -559,3 +559,100 @@ unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxL
 std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, unsigned int phenxLength = 7){
   return tspm::createSequence(firstPhenx, secondPhenx, phenxLength);
 }
+
+
+
+
+
+
+//' Sequences and summarizes all sequences in a dbmart
+ //' 
+ //' Summarizes the sequences in a dbmart
+ //' 
+ //' @returns The summary as data frame.
+ //' @param  df_dbMart The data frame that stores the data mart.
+ //' @param outputDir The path as string to the directory where the sequences should be stored.
+ //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+ //' @param numOfThreads The number of threads that should be used during sequencing.
+ //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+ //' @param removeSparseSequences  Boolean parameter to control if the sparsity should be applied.
+ //' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
+ //' @param createTemporalBuckets  Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
+ //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
+ //' @param durationSparsity  Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
+ //' @param durationSparsityValue Numeric value.
+ //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
+ //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+ //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+ //' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
+ //' @param includeDurations include duration buckets in the summary
+//[[Rcpp::export]]
+DataFrame sequenceAndSummarize(DataFrame df_dbMart,
+                               IntegerVector &lowerBucketThreshold,
+                               bool storeSeqDuringCreation = false,
+                               bool includeDurations = false,
+                               int numOfThreads = 1,
+                               std::string outputDir = "",
+                               std::string outputFilePrefix = "",
+                               bool removeSparseSequences = true,
+                               double sparsityValue = 0.05,
+                               bool createTemporalBuckets = false,
+                               bool durationSparsity = false,
+                               double durationSparsityValue = 0,
+                               bool removeSparseTemporalBuckets = false,
+                               int patIdLength= 7,
+                               double durationPeriods = 30.437,
+                               unsigned int daysForCoOoccurence = 14){
+  
+  std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+  Rcout <<"Data prepared!\n";
+  Rcout.flush();
+  std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
+                                                                          storeSeqDuringCreation,
+                                                                          outputDir,
+                                                                          outputFilePrefix,
+                                                                          removeSparseSequences,
+                                                                          sparsityValue,
+                                                                          createTemporalBuckets,
+                                                                          durationPeriods,
+                                                                          daysForCoOoccurence,
+                                                                          durationSparsity,
+                                                                          durationSparsityValue,
+                                                                          removeSparseTemporalBuckets,
+                                                                          patIdLength,
+                                                                          numOfThreads);
+  
+  std::vector<std::pair<std::pair<uint64_t, size_t>, size_t>> summary =
+    tspm::summarizeSequencesAsVector(sequences,
+                                     includeDurations,
+                                     as<std::vector<unsigned int>>(lowerBucketThreshold),
+                                     (unsigned int &)numOfThreads);
+  sequences.clear();
+  sequences.shrink_to_fit();
+  std::vector<std::uint64_t> seqIDs;
+  seqIDs.reserve(summary.size());
+  std::vector<std::uint64_t> counts;
+  counts.reserve(summary.size());
+  std::vector<std::uint64_t> durationBuckets;
+  durationBuckets.reserve(summary.size());
+  
+  for(std::pair<std::pair<uint64_t, size_t>, size_t> entry: summary){
+    std::uint64_t seq = entry.first.first;
+    seqIDs.emplace_back(seq);
+    
+    if(includeDurations){
+      std::uint32_t dur = entry.first.second;
+      durationBuckets.emplace_back(dur);
+    }
+    counts.emplace_back(entry.second);
+  }
+  
+  if(includeDurations){
+    return DataFrame::create(Named("sequence") = seqIDs, Named("durBucket") = durationBuckets, Named("count") = counts);
+  }else{
+    return DataFrame::create(Named("sequence") = seqIDs,Named("count") = counts);
+  }
+}
+  
+
+

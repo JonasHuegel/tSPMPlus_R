@@ -184,6 +184,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sequenceAndSummarize
+DataFrame sequenceAndSummarize(DataFrame df_dbMart, IntegerVector& lowerBucketThreshold, bool storeSeqDuringCreation, bool includeDurations, int numOfThreads, std::string outputDir, std::string outputFilePrefix, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, double durationPeriods, unsigned int daysForCoOoccurence);
+RcppExport SEXP _tSPMPlus_sequenceAndSummarize(SEXP df_dbMartSEXP, SEXP lowerBucketThresholdSEXP, SEXP storeSeqDuringCreationSEXP, SEXP includeDurationsSEXP, SEXP numOfThreadsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type df_dbMart(df_dbMartSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type lowerBucketThreshold(lowerBucketThresholdSEXP);
+    Rcpp::traits::input_parameter< bool >::type storeSeqDuringCreation(storeSeqDuringCreationSEXP);
+    Rcpp::traits::input_parameter< bool >::type includeDurations(includeDurationsSEXP);
+    Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
+    Rcpp::traits::input_parameter< bool >::type removeSparseSequences(removeSparseSequencesSEXP);
+    Rcpp::traits::input_parameter< double >::type sparsityValue(sparsityValueSEXP);
+    Rcpp::traits::input_parameter< bool >::type createTemporalBuckets(createTemporalBucketsSEXP);
+    Rcpp::traits::input_parameter< bool >::type durationSparsity(durationSparsitySEXP);
+    Rcpp::traits::input_parameter< double >::type durationSparsityValue(durationSparsityValueSEXP);
+    Rcpp::traits::input_parameter< bool >::type removeSparseTemporalBuckets(removeSparseTemporalBucketsSEXP);
+    Rcpp::traits::input_parameter< int >::type patIdLength(patIdLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type durationPeriods(durationPeriodsSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type daysForCoOoccurence(daysForCoOoccurenceSEXP);
+    rcpp_result_gen = Rcpp::wrap(sequenceAndSummarize(df_dbMart, lowerBucketThreshold, storeSeqDuringCreation, includeDurations, numOfThreads, outputDir, outputFilePrefix, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, durationPeriods, daysForCoOoccurence));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlus_createTransitiveSequences", (DL_FUNC) &_tSPMPlus_createTransitiveSequences, 4},
@@ -195,6 +221,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlus_getStartPhenxFromSequence", (DL_FUNC) &_tSPMPlus_getStartPhenxFromSequence, 2},
     {"_tSPMPlus_getEndPhenxFromSequence", (DL_FUNC) &_tSPMPlus_getEndPhenxFromSequence, 2},
     {"_tSPMPlus_createSequence", (DL_FUNC) &_tSPMPlus_createSequence, 3},
+    {"_tSPMPlus_sequenceAndSummarize", (DL_FUNC) &_tSPMPlus_sequenceAndSummarize, 16},
     {NULL, NULL, 0}
 };
 
