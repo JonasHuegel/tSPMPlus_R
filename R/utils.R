@@ -58,7 +58,7 @@ splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE){
   sequenceSizeInCPP <- 16
   uint64_max <- 2**(64)-1
   uint32_max <- 2**(32)-1
-  sequencesSizeInR <- 2 * as.numeric(object.size(unit32_max)) + as.numeric(object.size(uint64_max))
+  sequencesSizeInR <- 2 * as.numeric(object.size(uint32_max)) + as.numeric(object.size(uint64_max))
   if(includeCorSeq == TRUE){
     sequencesSizeInR <- sequencesSizeInR + 2 * as.numeric(object.size(uint32_max))
   }
