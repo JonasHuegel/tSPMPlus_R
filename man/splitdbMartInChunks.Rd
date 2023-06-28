@@ -4,12 +4,14 @@
 \alias{splitdbMartInChunks}
 \title{Split a numeric dbMart in multiple chunks that can be sequenced}
 \usage{
-splitdbMartInChunks(dbmart_num, includeCorSeq = FALSE)
+splitdbMartInChunks(dbmart_num, includeCorSeq = FALSE, buffer = 1e+07)
 }
 \arguments{
 \item{dbmart_num}{The numeric dbmart that should be splitt in chunks.}
 
 \item{includeCorSeq}{A boolean parameter, should be true if the corseq flag will be set to true during sequencing. Default is false!}
+
+\item{buffer}{a additional buffer how many additional bytes should not be considered as available. Default is 10 MB.}
 }
 \value{
 A list of 2 list. The first list contains the dbmart chunks, the second one contains the look up tables to translate the chunk-patnum to one from the orignal dbmart.

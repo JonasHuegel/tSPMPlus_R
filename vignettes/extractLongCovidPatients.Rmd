@@ -74,8 +74,23 @@ head(dbmart)
 ```
 ```{r remove height and weight only with observations, include = FALSE}
 ## Lets remove Body Height & Body Weight	
-#dbmart <- subset(dbmart,!(dbmart$description %in% c("Body Height","Body Weight")))
+dbmart <- subset(dbmart,!(dbmart$description %in% c("Body Height","Body Weight")))
 ```
+### adaptive sequencing
+If the following steps fail due to memory constraints it is possible to utilize the adaptive chunks functionality to split the dbmart in different chunks, which can be sequenced separately.
+
+```{r adaptice chunks , include = FALSE}
+#dbMartChunks <- tSPMPlus::splitdbMartInChunks(dbMart$dbMart, TRUE , buffer = 10000000)
+## now you can mine the sequences on each chunck, the function ensures that the same phenx have the same number, and the patient number starts with 0 in every chunk, after computing the sequences, you need to update the patient id in the results using the corresponding look up table for the chunk, e.g. 
+#seq <- tSPMPlus::extractAllTransiviteSequences(dbMartChunks$chunks[1]) # change the tSPM function to the corresponding one of your use case 
+#seq <- seq %>% dplyr::left_join(as.data.frame(dbMartChunks$lookUps[1]), by=c("patient_num"="chunk_pat_num")) %>% dplyr::select(patient_num = 'num_pat_num', sequence, duration)
+#now you can either store the sequences and sequence more of the data mart or just use this subset for your analyses.
+#Since this example requires less than 4 GB of overall memory, you probably do not need it, but it might be handy when applying the vignette on larger datasets 
+```
+
+
+
+
 tSPM+ requires that we use numeric identifiers for the patient number as well as for the identifier of the data mart entries (phenx). Calling the `transformDbMartToNumeric` function will create numeric ids (starting by zero and counting up wards) for the patient numbers and phenx. We split the data set in cases and control. Cases are patients with covid, control without. 
 
 ```{r transform to numeric, warning=FALSE}
@@ -92,6 +107,8 @@ head(dbMart$dbMart)
 head(dbMart$phenxLookUp)
 head(dbMart$patientLookUp)
 ```
+
+
 ## Determine possible Candidates
 
 ### Call tSPM+ and extract all sequences that end with a weak canidate
@@ -236,7 +253,7 @@ temporalBucket =  c(0,1,3)
 minDuration = 0 #technical parameter, ignore for now
 bitShift = 0 #technical parameter, ignore for now
 lengthOfPhenx = 7 #technical parameter
-storeSequencesDuringCreation = FALSE #if true, old way -> writing out "plain" sparse sequences in patient based files, FALSE-> do in memory sparsity
+storeSequencesDuringCreation = FALSE 
 dbmart_num = dbMart$dbMart
 
 ## get all the sequences that end with a candidate

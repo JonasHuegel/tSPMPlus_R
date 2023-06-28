@@ -46,21 +46,20 @@ transformDbMartToNumeric<- function(dbmart){
 
 #'@title Split a numeric dbMart in multiple chunks that can be sequenced
 #'@description Split a numeric dbMart in multiple chunks that can be sequenced. This function should be used if the original numeric dbmart contains to many entries. 
-#'Either due to memory limitation or the that the number of sequences is larger than 2**31-1, which is the maximum of entries in an R vector.
+#'  Either due to memory limitation or the that the number of sequences is larger than 2**31-1, which is the maximum of entries in an R vector.
 #'@param dbmart_num The numeric dbmart that should be splitt in chunks.
 #'@param includeCorSeq A boolean parameter, should be true if the corseq flag will be set to true during sequencing. Default is false!
+#'@param buffer a additional buffer how many additional bytes should not be considered as available. Default is 10 MB. 
 #'@returns A list of 2 list. The first list contains the dbmart chunks, the second one contains the look up tables to translate the chunk-patnum to one from the orignal dbmart.
 #'
-splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE){
+splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE, buffer = 10000000){
   uniquePatients <-unique(dbmart_num$num_pat_num)
   entriesPerPatient <- count(dbmart_num$num_pat_num)
   dbmartEntrySizeInCPP <- 16
   sequenceSizeInCPP <- 16
-  uint64_max <- 2**(64)-1
-  uint32_max <- 2**(32)-1
-  sequencesSizeInR <- 2 * as.numeric(object.size(uint32_max)) + as.numeric(object.size(uint64_max))
+  sequencesSizeInR <- 20
   if(includeCorSeq == TRUE){
-    sequencesSizeInR <- sequencesSizeInR + 2 * as.numeric(object.size(uint32_max))
+    sequencesSizeInR <- sequencesSizeInR + 16
   }
 
   entriesPerPatient <- entriesPerPatient %>% dplyr::mutate(seqs = (freq*(freq-1))/2)
@@ -69,8 +68,7 @@ splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE){
   
   availMem <- as.numeric(memuse::Sys.meminfo()$freeram)
   dbMartSize <- as.numeric(object.size(dbmart_num))
-  # subtract additional 10 MB as buffer
-  availMem <- availMem - dbMartSize - 1024*1024*10
+  availMem <- availMem - dbMartSize - buffer
   
   memInChunk <- 0
   firstEntryInChunk <- c(0)
@@ -81,9 +79,9 @@ splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE){
   for(pat in uniquePatients){
     pat <- pat+1 #(pats are starting with 0 for c++ so add one to use it )
     memInChunk <- memInChunk + entriesPerPatient$mem[pat]
-    seqCount <- seqCount + entriesPerPatient$mem[pat]
+    seqCount <- seqCount + entriesPerPatient$seqs[pat]
     if(memInChunk >= availMem ||seqCount >= maxSeqCount){
-      if(entriesPerPatient$mem[pat] > availMem || entriesPerPatient$mem[pat]> maxSeqCount){
+      if(entriesPerPatient$mem[pat] > availMem || entriesPerPatient$seqs[pat]> maxSeqCount){
         stop(paste0("Cannont split the dbMart in adaptive chunks, the required memory for one Patient exceeds the available memory! To much memory required for patient: ", pat-1))
       }
       firstEntryInChunk <- c(firstEntryInChunk, pat-1)
@@ -104,7 +102,7 @@ splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE){
       stop <- nrow(dbmart_num)
     }
 
-    chunk <- dbmart_num %>% filter(dbmart_num$num_pat_num >= start & dbmart_num$num_pat_num < stop)
+    chunk <- dbmart_num %>% dplyr::filter(dbmart_num$num_pat_num >= start & dbmart_num$num_pat_num < stop)
 
     patientsInChunk <- c(unique(chunk$num_pat_num))
     
@@ -114,7 +112,8 @@ splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE){
     
     chunkLookUp[,chunk_pat_num := .I]
     chunkLookUp <- chunkLookUp %>% dplyr::mutate(chunk_pat_num = chunk_pat_num -1)
-    chunks$chunks <- append(chunks$chunks, list(chunk %>% dplyr::left_join(chunkLookUp, by="num_pat_num") %>% select(num_pat_num=chunk_pat_num, num_Phenx, start_date)))
+    chunks$chunks <- append(chunks$chunks, list(chunk %>% dplyr::left_join(chunkLookUp, by="num_pat_num") 
+                                                %>% dplyrselect(num_pat_num=chunk_pat_num, num_Phenx, start_date)))
     chunks$lookUps <- append(chunks$lookUps, list(chunkLookUp))
   }  
   return(chunks)
