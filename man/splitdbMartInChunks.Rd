@@ -18,5 +18,5 @@ A list of 2 list. The first list contains the dbmart chunks, the second one cont
 }
 \description{
 Split a numeric dbMart in multiple chunks that can be sequenced. This function should be used if the original numeric dbmart contains to many entries. 
-Either due to memory limitation or the that the number of sequences is larger than 2**31-1, which is the maximum of entries in an R vector.
+ Either due to memory limitation or the that the number of sequences is larger than 2**31-1, which is the maximum of entries in an R vector.
 }

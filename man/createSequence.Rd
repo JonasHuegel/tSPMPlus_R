@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{createSequence}
 \alias{createSequence}
-\title{Create a sequence from toi phenx}
+\title{Create a sequence from two phenx}
 \usage{
 createSequence(firstPhenx, secondPhenx, phenxLength = 7L)
 }
@@ -17,5 +17,5 @@ createSequence(firstPhenx, secondPhenx, phenxLength = 7L)
 Integer.
 }
 \description{
-Function create a sequence from toi phenx.
+Function create a sequence from two phenx.
 }
