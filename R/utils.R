@@ -113,7 +113,7 @@ splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE, buffer = 10000
     chunkLookUp[,chunk_pat_num := .I]
     chunkLookUp <- chunkLookUp %>% dplyr::mutate(chunk_pat_num = chunk_pat_num -1)
     chunks$chunks <- append(chunks$chunks, list(chunk %>% dplyr::left_join(chunkLookUp, by="num_pat_num") 
-                                                %>% dplyrselect(num_pat_num=chunk_pat_num, num_Phenx, start_date)))
+                                                %>% dplyr::select(num_pat_num=chunk_pat_num, num_Phenx, start_date)))
     chunks$lookUps <- append(chunks$lookUps, list(chunkLookUp))
   }  
   return(chunks)

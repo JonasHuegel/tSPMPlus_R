@@ -75,6 +75,74 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
 }
 
 
+
+
+//' summarize
+ //'
+ //' Function to summaarize a set of sequences and  returing a R data frame that contains the summary.
+ //' that calls this functions with predefined parameters.
+ //' 
+ //' @returns The summary as data frame.
+ //' @param numOfThreads The number of threads that should be used during sequencing.
+ //' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
+ //' @param includeDurations include duration buckets in the summary
+ //' @param sequences the vector containing the sequences to summarize
+DataFrame summarize(std::vector<tspm::temporalSequence> &sequences,
+                    std::vector<unsigned int> lowerBucketThreshold,
+                    bool includeDurations = false,
+                    bool summaryOnPatientLevel = false,
+                    unsigned int numOfThreads = 1){
+  std::vector<std::pair<tspm::temporalSequence, size_t>> summary =
+    tspm::summarizeSequencesAsVector(sequences,
+                                     includeDurations,
+                                     lowerBucketThreshold,
+                                     summaryOnPatientLevel,
+                                     numOfThreads);
+  sequences.clear();
+  sequences.shrink_to_fit();
+  std::vector<std::uint64_t> seqIDs;
+  seqIDs.reserve(summary.size());
+  std::vector<std::uint64_t> counts;
+  counts.reserve(summary.size());
+  std::vector<std::uint32_t> durationBuckets;
+  durationBuckets.reserve(summary.size());
+  std::vector<std::uint32_t> patientIDs;
+  patientIDs.reserve(summary.size());
+  
+  
+  for(std::pair<tspm::temporalSequence, size_t> entry: summary){
+    std::uint64_t seq = entry.first.seqID;
+    seqIDs.emplace_back(seq);
+    
+    if(includeDurations){
+      std::uint32_t dur = entry.first.duration;
+      durationBuckets.emplace_back(dur);
+    }
+    if(summaryOnPatientLevel){
+      std::uint32_t patID = entry.first.patientID;
+      patientIDs.emplace_back(patID);
+    }
+    counts.emplace_back(entry.second);
+  }
+  DataFrame summaryDF = NULL; 
+  if(includeDurations){
+    if(summaryOnPatientLevel){
+      summaryDF = DataFrame::create(Named("patientID") = patientIDs, Named("sequence") = seqIDs, Named("durBucket") = durationBuckets, Named("count") = counts);
+    }else{
+      summaryDF = DataFrame::create(Named("sequence") = seqIDs, Named("durBucket") = durationBuckets, Named("count") = counts);
+    }
+  }else{
+    if(summaryOnPatientLevel){
+      summaryDF = DataFrame::create(Named("patientID") = patientIDs, Named("sequence") = seqIDs,Named("count") = counts);
+    }else{
+      summaryDF = DataFrame::create(Named("sequence") = seqIDs,Named("count") = counts);
+    }
+  }
+
+  return summaryDF;
+}
+
+
 //' tSPMPlus
 //'
 //' Function to call the tSPM+ workflow, most of the other function provide by this package are wrapper functions
@@ -372,6 +440,7 @@ DataFrame transformToCandidateDataFrame(std::vector<tspm::temporalSequence> &seq
 //' @param durationSparsityValue Numeric value.
 //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
+//' @param summarize Boolean, if return a summary of the sequences instead of the sequences
 // [[Rcpp::export]]
 DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    unsigned int bitShift,
@@ -393,7 +462,9 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    int patIdLength= 7,
                                    bool returnDuration = true,
                                    double durationPeriods = 30.437,
-                                   unsigned int daysForCoOoccurence = 14 ){
+                                   unsigned int daysForCoOoccurence = 14,
+                                   bool returnSummary = false,
+                                   bool summaryOnPatientLevel = false){
   
   
   if(numOfThreads <= 0){
@@ -426,7 +497,15 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
   sequences = tspm::extractSequencesWithEnd(sequences, bitShift, lengthOfPhenx, endPhenxSet, numOfThreads);
   Rcout<< sequences.size() << std::endl;
   Rcout.flush();
-  return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+  if(returnSummary){
+    return summarize(sequences,
+                     as<std::vector<unsigned int>>(lowerBucketThresholds),
+                     returnDuration,
+                     summaryOnPatientLevel,
+                     (unsigned int) numOfThreads);
+  }else{
+   return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+  }
 
 }
 
@@ -547,9 +626,9 @@ unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxL
 }
 
 
-//' Create a sequence from toi phenx
+//' Create a sequence from two phenx
 //' 
-//' Function create a sequence from toi phenx.
+//' Function create a sequence from two phenx.
 //' 
 //' @returns Integer.
 //' @param  firstPhenx  Integer.
@@ -559,10 +638,6 @@ unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxL
 std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, unsigned int phenxLength = 7){
   return tspm::createSequence(firstPhenx, secondPhenx, phenxLength);
 }
-
-
-
-
 
 
 //' Sequences and summarizes all sequences in a dbmart
@@ -602,7 +677,8 @@ DataFrame sequenceAndSummarize(DataFrame df_dbMart,
                                bool removeSparseTemporalBuckets = false,
                                int patIdLength= 7,
                                double durationPeriods = 30.437,
-                               unsigned int daysForCoOoccurence = 14){
+                               unsigned int daysForCoOoccurence = 14,
+                               bool summaryOnPatientLevel = false){
   
   std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
   Rcout <<"Data prepared!\n";
@@ -622,37 +698,13 @@ DataFrame sequenceAndSummarize(DataFrame df_dbMart,
                                                                           patIdLength,
                                                                           numOfThreads);
   
-  std::vector<std::pair<tspm::temporalSequence, size_t>> summary =
-    tspm::summarizeSequencesAsVector(sequences,
-                                     includeDurations,
-                                     as<std::vector<unsigned int>>(lowerBucketThreshold),
-                                     (unsigned int &)numOfThreads);
-  sequences.clear();
-  sequences.shrink_to_fit();
-  std::vector<std::uint64_t> seqIDs;
-  seqIDs.reserve(summary.size());
-  std::vector<std::uint64_t> counts;
-  counts.reserve(summary.size());
-  std::vector<std::uint64_t> durationBuckets;
-  durationBuckets.reserve(summary.size());
-  
-  for(std::pair<tspm::temporalSequence, size_t> entry: summary){
-    std::uint64_t seq = entry.first.seqID;
-    seqIDs.emplace_back(seq);
-    
-    if(includeDurations){
-      std::uint32_t dur = entry.first.duration;
-      durationBuckets.emplace_back(dur);
-    }
-    counts.emplace_back(entry.second);
-  }
-  
-  if(includeDurations){
-    return DataFrame::create(Named("sequence") = seqIDs, Named("durBucket") = durationBuckets, Named("count") = counts);
-  }else{
-    return DataFrame::create(Named("sequence") = seqIDs,Named("count") = counts);
-  }
+  return summarize(sequences,
+                   as<std::vector<unsigned int>>(lowerBucketThreshold),
+                   includeDurations,
+                   summaryOnPatientLevel,
+                   (unsigned int) numOfThreads);
 }
+
   
 
 

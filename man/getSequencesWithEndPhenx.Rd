@@ -25,7 +25,9 @@ getSequencesWithEndPhenx(
   patIdLength = 7L,
   returnDuration = TRUE,
   durationPeriods = 30.437,
-  daysForCoOoccurence = 14L
+  daysForCoOoccurence = 14L,
+  returnSummary = FALSE,
+  summaryOnPatientLevel = FALSE
 )
 }
 \arguments{
@@ -70,6 +72,8 @@ getSequencesWithEndPhenx(
 \item{durationPeriods}{Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years.}
 
 \item{daysForCoOoccurence}{Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).}
+
+\item{summarize}{Boolean, if return a summary of the sequences instead of the sequences}
 }
 \value{
 The sequences as data frame.
