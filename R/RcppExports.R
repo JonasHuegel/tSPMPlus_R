@@ -15,6 +15,9 @@ NULL
 #' Get Sequences With Specific Start Phenx
 NULL
 
+#' Get Sequences that start or end with a vector of given phenx
+NULL
+
 #' Sequences and summarizes all sequences in a dbmart
 NULL
 
@@ -125,6 +128,10 @@ getSequencesWithEndPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBu
 
 getSequencesWithStartPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE) {
     .Call(`_tSPMPlus_getSequencesWithStartPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel)
+}
+
+getSequencesContainingPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, phenxOfInterest, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE) {
+    .Call(`_tSPMPlus_getSequencesContainingPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, phenxOfInterest, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel)
 }
 
 #' Get Candidate Sequences For Phenx Of Interest (POI)
