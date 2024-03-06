@@ -12,7 +12,7 @@ using namespace Rcpp;
 //' transform the dbmart data frame to c++ structure
 //' Function to create all transitive sequences
 //' an store in binary format them to files.
-//' 
+//' @name transformDataFrameToStruct
 //' @returns dbMart as c++ struct
 //' @param  df_dbMart The dataframe that stores the numeric data mart.
 std::vector<tspm::dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
@@ -77,15 +77,15 @@ size_t createTransitiveSequences(DataFrame &df_dbMart,
 
 
 //' summarize
- //'
- //' Function to summaarize a set of sequences and  returing a R data frame that contains the summary.
- //' that calls this functions with predefined parameters.
- //' 
- //' @returns The summary as data frame.
- //' @param numOfThreads The number of threads that should be used during sequencing.
- //' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
- //' @param includeDurations include duration buckets in the summary
- //' @param sequences the vector containing the sequences to summarize
+//'
+//' Function to summarize a set of sequences and  returing a R data frame that contains the summary.
+//' that calls this functions with predefined parameters.
+//' @name summarize
+//' @returns The summary as data frame.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
+//' @param includeDurations include duration buckets in the summary
+//' @param sequences the vector containing the sequences to summarize
 DataFrame summarize(std::vector<tspm::temporalSequence> &sequences,
                     std::vector<unsigned int> lowerBucketThreshold,
                     bool includeDurations = false,
@@ -441,7 +441,8 @@ DataFrame transformToCandidateDataFrame(std::vector<tspm::temporalSequence> &seq
 //' @param durationSparsityValue Numeric value.
 //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
-//' @param summarize Boolean, if return a summary of the sequences instead of the sequences
+//' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
+//' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
 // [[Rcpp::export]]
 DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    unsigned int bitShift,
@@ -513,38 +514,134 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
 
 
 //' Get Sequences With Specific Start Phenx
- //' 
- //' Function to extract all transitive sequences that end with given endPhenxs.
- //' 
- //' @returns The sequences as data frame.
- //' @param df_dbMart The data frame that stores the data mart.
- //' @param outputDir The path as string to the directory where the sequences should be stored.
- //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
- //' @param startPhenx IntegerVector, contains the phenx that sequences should end with.
- //' @param numOfThreads The number of threads that should be used during sequencing.
- //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
- //' @param returnDuration Boolean, controls if the data frame that is returns contains. 
- //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
- //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
- //' @param minDuration the minimum duration a sequence must have, for j to be considered a candidate. Not Implemented at the moment!
- //' @param bitShift  Integer, the number of bits used to shift the duration into sequnceID.
- //' @param lengthOfPhenx describes the number of digits that represents a phenx in the sequence.
- //' @param lowerBucketThresholds the lower thresholds for the temporal buckets, that are stored when the includeCorBuckets flag is set. 
- //' @param includeCorBuckets Boolean, flag to control if the R data frame that is returned should contain columns for for the endPhenx and the buckets set in lowerBucketThresholds 
- //' @param removeSparseSequences Boolean parameter to control if the sparsity should be applied.
- //' @param sparsityValue The numeric value for the sparsity. DEFAULT = 0.05.
- //' @param createTemporalBuckets Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
- //' @param durationSparsity Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
- //' @param durationSparsityValue Numeric value.
- //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
- //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
- //' @param summarize Boolean, if return a summary of the sequences instead of the sequences
- // [[Rcpp::export]]
- DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
+//' 
+//' Function to extract all transitive sequences that end with given endPhenxs.
+//' @name getSequencesWithStartPhenx
+//' @returns The sequences as data frame.
+//' @param df_dbMart The data frame that stores the data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param startPhenx IntegerVector, contains the phenx that sequences should end with.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param returnDuration Boolean, controls if the data frame that is returns contains. 
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @param minDuration the minimum duration a sequence must have, for j to be considered a candidate. Not Implemented at the moment!
+//' @param bitShift  Integer, the number of bits used to shift the duration into sequnceID.
+//' @param lengthOfPhenx describes the number of digits that represents a phenx in the sequence.
+//' @param lowerBucketThresholds the lower thresholds for the temporal buckets, that are stored when the includeCorBuckets flag is set. 
+//' @param includeCorBuckets Boolean, flag to control if the R data frame that is returned should contain columns for for the endPhenx and the buckets set in lowerBucketThresholds 
+//' @param removeSparseSequences Boolean parameter to control if the sparsity should be applied.
+//' @param sparsityValue The numeric value for the sparsity. DEFAULT = 0.05.
+//' @param createTemporalBuckets Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
+//' @param durationSparsity Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
+//' @param durationSparsityValue Numeric value.
+//' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
+//' @param patIdLength Integer, describes the number of digits that are used for the patient number.
+//' @param summarize Boolean, if return a summary of the sequences instead of the sequences
+// [[Rcpp::export]]
+DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
+                                  unsigned int bitShift,
+                                  unsigned int lengthOfPhenx,
+                                  IntegerVector &lowerBucketThresholds,
+                                  IntegerVector &startPhenx,
+                                  bool includeCorBuckets = false,
+                                  std::uint64_t minDuration = 0,
+                                  bool storeSeqDuringCreation = false,
+                                  std::string outputDir = "",
+                                  std::string outputFilePrefix = "",
+                                  int numOfThreads = 1,
+                                  bool removeSparseSequences = true,
+                                  double sparsityValue = 0.05,
+                                  bool createTemporalBuckets = false,
+                                  bool durationSparsity = false,
+                                  double durationSparsityValue = 0,
+                                  bool removeSparseTemporalBuckets = false,
+                                  int patIdLength= 7,
+                                  bool returnDuration = true,
+                                  double durationPeriods = 30.437,
+                                  unsigned int daysForCoOoccurence = 14,
+                                  bool returnSummary = false,
+                                  bool summaryOnPatientLevel = false){
+ 
+ 
+ if(numOfThreads <= 0){
+   numOfThreads = 1;
+ }
+ Rcout <<"Preparing data!\n";
+ Rcout.flush();
+ std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+ Rcout <<"Data prepared!\n";
+ Rcout.flush();
+ std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
+                                                                         storeSeqDuringCreation,
+                                                                         outputDir,
+                                                                         outputFilePrefix,
+                                                                         removeSparseSequences,
+                                                                         sparsityValue,
+                                                                         createTemporalBuckets,
+                                                                         durationPeriods,
+                                                                         daysForCoOoccurence,
+                                                                         durationSparsity,
+                                                                         durationSparsityValue,
+                                                                         removeSparseTemporalBuckets,
+                                                                         patIdLength,
+                                                                         numOfThreads);
+ 
+ 
+ ips4o::parallel::sort(sequences.begin(), sequences.end(),tspm::timedSequencesSorter, numOfThreads);
+ std::set<unsigned int > startPhenxSet;
+ startPhenxSet.insert(startPhenx.begin(), startPhenx.end());
+ sequences = tspm::extractSequencesWithSpecificStart(sequences, minDuration, bitShift, lengthOfPhenx, startPhenxSet, numOfThreads);
+ Rcout<< sequences.size() << std::endl;
+ Rcout.flush();
+ if(returnSummary){
+   return summarize(sequences,
+                    as<std::vector<unsigned int>>(lowerBucketThresholds),
+                    returnDuration,
+                    summaryOnPatientLevel,
+                    (unsigned int) numOfThreads);
+ }else{
+   return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+ }
+ 
+}
+
+//' Get Sequences that start or end with a vector of given phenx
+//' 
+//' Function to extract all transitive sequences that end with given endPhenxs.
+//' @name getSequencesContainingPhenx
+//' @returns The sequences as data frame.
+//' @param df_dbMart The data frame that stores the data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param phenxOfInterest IntegerVector, contains the phenx that sequences should end with.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param returnDuration Boolean, controls if the data frame that is returns contains. 
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @param minDuration the minimum duration a sequence must have, for j to be considered a candidate. Not Implemented at the moment!
+//' @param bitShift  Integer, the number of bits used to shift the duration into sequnceID.
+//' @param lengthOfPhenx describes the number of digits that represents a phenx in the sequence.
+//' @param lowerBucketThresholds the lower thresholds for the temporal buckets, that are stored when the includeCorBuckets flag is set. 
+//' @param includeCorBuckets Boolean, flag to control if the R data frame that is returned should contain columns for for the endPhenx and the buckets set in lowerBucketThresholds 
+//' @param removeSparseSequences Boolean parameter to control if the sparsity should be applied.
+//' @param sparsityValue The numeric value for the sparsity. DEFAULT = 0.05.
+//' @param createTemporalBuckets Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
+//' @param durationSparsity Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
+//' @param durationSparsityValue Numeric value.
+//' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
+//' @param patIdLength Integer, describes the number of digits that are used for the patient number.
+//' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
+//' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+// [[Rcpp::export]]
+DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
                                     unsigned int bitShift,
                                     unsigned int lengthOfPhenx,
                                     IntegerVector &lowerBucketThresholds,
-                                    IntegerVector &startPhenx,
+                                    IntegerVector &phenxOfInterest,
                                     bool includeCorBuckets = false,
                                     std::uint64_t minDuration = 0,
                                     bool storeSeqDuringCreation = false,
@@ -563,151 +660,56 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                     unsigned int daysForCoOoccurence = 14,
                                     bool returnSummary = false,
                                     bool summaryOnPatientLevel = false){
-   
-   
-   if(numOfThreads <= 0){
-     numOfThreads = 1;
-   }
-   Rcout <<"Preparing data!\n";
-   Rcout.flush();
-   std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
-   Rcout <<"Data prepared!\n";
-   Rcout.flush();
-   std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
-                                                                           storeSeqDuringCreation,
-                                                                           outputDir,
-                                                                           outputFilePrefix,
-                                                                           removeSparseSequences,
-                                                                           sparsityValue,
-                                                                           createTemporalBuckets,
-                                                                           durationPeriods,
-                                                                           daysForCoOoccurence,
-                                                                           durationSparsity,
-                                                                           durationSparsityValue,
-                                                                           removeSparseTemporalBuckets,
-                                                                           patIdLength,
-                                                                           numOfThreads);
-   
-   
-   ips4o::parallel::sort(sequences.begin(), sequences.end(),tspm::timedSequencesSorter, numOfThreads);
-   std::set<unsigned int > startPhenxSet;
-   startPhenxSet.insert(startPhenx.begin(), startPhenx.end());
-   sequences = tspm::extractSequencesWithSpecificStart(sequences, minDuration, bitShift, lengthOfPhenx, startPhenxSet, numOfThreads);
-   Rcout<< sequences.size() << std::endl;
-   Rcout.flush();
-   if(returnSummary){
-     return summarize(sequences,
-                      as<std::vector<unsigned int>>(lowerBucketThresholds),
-                      returnDuration,
-                      summaryOnPatientLevel,
-                      (unsigned int) numOfThreads);
-   }else{
-     return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
-   }
-   
+ 
+ 
+ if(numOfThreads <= 0){
+   numOfThreads = 1;
  }
-
-//' Get Sequences that start or end with a vector of given phenx
- //' 
- //' Function to extract all transitive sequences that end with given endPhenxs.
- //' 
- //' @returns The sequences as data frame.
- //' @param df_dbMart The data frame that stores the data mart.
- //' @param outputDir The path as string to the directory where the sequences should be stored.
- //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
- //' @param phenxOfInterest IntegerVector, contains the phenx that sequences should end with.
- //' @param numOfThreads The number of threads that should be used during sequencing.
- //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
- //' @param returnDuration Boolean, controls if the data frame that is returns contains. 
- //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
- //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
- //' @param minDuration the minimum duration a sequence must have, for j to be considered a candidate. Not Implemented at the moment!
- //' @param bitShift  Integer, the number of bits used to shift the duration into sequnceID.
- //' @param lengthOfPhenx describes the number of digits that represents a phenx in the sequence.
- //' @param lowerBucketThresholds the lower thresholds for the temporal buckets, that are stored when the includeCorBuckets flag is set. 
- //' @param includeCorBuckets Boolean, flag to control if the R data frame that is returned should contain columns for for the endPhenx and the buckets set in lowerBucketThresholds 
- //' @param removeSparseSequences Boolean parameter to control if the sparsity should be applied.
- //' @param sparsityValue The numeric value for the sparsity. DEFAULT = 0.05.
- //' @param createTemporalBuckets Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
- //' @param durationSparsity Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
- //' @param durationSparsityValue Numeric value.
- //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
- //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
- //' @param summarize Boolean, if return a summary of the sequences instead of the sequences
- // [[Rcpp::export]]
- DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
-                                      unsigned int bitShift,
-                                      unsigned int lengthOfPhenx,
-                                      IntegerVector &lowerBucketThresholds,
-                                      IntegerVector &phenxOfInterest,
-                                      bool includeCorBuckets = false,
-                                      std::uint64_t minDuration = 0,
-                                      bool storeSeqDuringCreation = false,
-                                      std::string outputDir = "",
-                                      std::string outputFilePrefix = "",
-                                      int numOfThreads = 1,
-                                      bool removeSparseSequences = true,
-                                      double sparsityValue = 0.05,
-                                      bool createTemporalBuckets = false,
-                                      bool durationSparsity = false,
-                                      double durationSparsityValue = 0,
-                                      bool removeSparseTemporalBuckets = false,
-                                      int patIdLength= 7,
-                                      bool returnDuration = true,
-                                      double durationPeriods = 30.437,
-                                      unsigned int daysForCoOoccurence = 14,
-                                      bool returnSummary = false,
-                                      bool summaryOnPatientLevel = false){
-   
-   
-   if(numOfThreads <= 0){
-     numOfThreads = 1;
-   }
-   Rcout <<"Preparing data!\n";
-   Rcout.flush();
-   std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
-   Rcout <<"Data prepared!\n";
-   Rcout.flush();
-   std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
-                                                                           storeSeqDuringCreation,
-                                                                           outputDir,
-                                                                           outputFilePrefix,
-                                                                           removeSparseSequences,
-                                                                           sparsityValue,
-                                                                           createTemporalBuckets,
-                                                                           durationPeriods,
-                                                                           daysForCoOoccurence,
-                                                                           durationSparsity,
-                                                                           durationSparsityValue,
-                                                                           removeSparseTemporalBuckets,
-                                                                           patIdLength,
-                                                                           numOfThreads);
-   
-   
-   ips4o::parallel::sort(sequences.begin(), sequences.end(),tspm::timedSequencesSorter, numOfThreads);
-   std::set<unsigned int > phenxSet;
-   phenxSet.insert(phenxOfInterest.begin(), phenxOfInterest.end());
-   sequences = tspm::extractSequencesWithSpecificStart(sequences, minDuration, bitShift, lengthOfPhenx, phenxSet, numOfThreads);
-   Rcout<< sequences.size() << std::endl;
-   Rcout.flush();
-   if(returnSummary){
-     return summarize(sequences,
-                      as<std::vector<unsigned int>>(lowerBucketThresholds),
-                      returnDuration,
-                      summaryOnPatientLevel,
-                      (unsigned int) numOfThreads);
-   }else{
-     return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
-   }
-   
+ Rcout <<"Preparing data!\n";
+ Rcout.flush();
+ std::vector<tspm::dbMartEntry> dbMart = transformDataFrameToStruct(df_dbMart);
+ Rcout <<"Data prepared!\n";
+ Rcout.flush();
+ std::vector<tspm::temporalSequence> sequences =  tspm::sequenceWorkflow(dbMart,
+                                                                         storeSeqDuringCreation,
+                                                                         outputDir,
+                                                                         outputFilePrefix,
+                                                                         removeSparseSequences,
+                                                                         sparsityValue,
+                                                                         createTemporalBuckets,
+                                                                         durationPeriods,
+                                                                         daysForCoOoccurence,
+                                                                         durationSparsity,
+                                                                         durationSparsityValue,
+                                                                         removeSparseTemporalBuckets,
+                                                                         patIdLength,
+                                                                         numOfThreads);
+ 
+ 
+ ips4o::parallel::sort(sequences.begin(), sequences.end(),tspm::timedSequencesSorter, numOfThreads);
+ std::set<unsigned int > phenxSet;
+ phenxSet.insert(phenxOfInterest.begin(), phenxOfInterest.end());
+ sequences = tspm::extractSequencesWithSpecificStart(sequences, minDuration, bitShift, lengthOfPhenx, phenxSet, numOfThreads);
+ Rcout<< sequences.size() << std::endl;
+ Rcout.flush();
+ if(returnSummary){
+   return summarize(sequences,
+                    as<std::vector<unsigned int>>(lowerBucketThresholds),
+                    returnDuration,
+                    summaryOnPatientLevel,
+                    (unsigned int) numOfThreads);
+ }else{
+   return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
  }
+ 
+}
 
 
 
 //' Get Candidate Sequences For Phenx Of Interest (POI)
 //' 
 //' Function to extract all sequences that end with phenx j, that is a end phenx for each phenx in startPhenxOfInterest.
-//' 
+//' @name getCandidateSequencesForPOI
 //' @returns The sequences as data frame.
 //' @param  df_dbMart The data frame that stores the data mart.
 //' @param minDuration the minimum duration at least one sequence from type poi->j must have, for j to be considered a candidate.
@@ -798,7 +800,7 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
 //' Get Start Phenx From Sequence
 //' 
 //' Function to extract the start Phenx from a sequence.
-//' 
+//' @name getStartPhenxFromSequence
 //' @returns The startPhenx of a sequence
 //' @param  sequence  Integer.
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
@@ -810,7 +812,7 @@ unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phen
 //' Get End Phenx From Sequence
 //' 
 //' Function to extract the end Phenx from a sequence.
-//' 
+//' @name getEndPhenxFromSequence
 //' @returns The endPhenx of a sequence.
 //' @param  sequence  Integer.
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
@@ -823,7 +825,7 @@ unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxL
 //' Create a sequence from two phenx
 //' 
 //' Function create a sequence from two phenx.
-//' 
+//' @name createSequence
 //' @returns Integer.
 //' @param  firstPhenx  Integer.
 //' @param  secondPhenx  Integer.
@@ -835,29 +837,30 @@ std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, 
 
 
 //' Sequences and summarizes all sequences in a dbmart
- //' 
- //' Summarizes the sequences in a dbmart
- //' 
- //' @returns The summary as data frame.
- //' @param  df_dbMart The data frame that stores the data mart.
- //' @param outputDir The path as string to the directory where the sequences should be stored.
- //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
- //' @param numOfThreads The number of threads that should be used during sequencing.
- //' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
- //' @param removeSparseSequences  Boolean parameter to control if the sparsity should be applied.
- //' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
- //' @param createTemporalBuckets  Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
- //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
- //' @param durationSparsity  Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
- //' @param durationSparsityValue Numeric value.
- //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
- //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
- //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
- //' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
- //' @param includeDurations include duration buckets in the summary
-//[[Rcpp::export]]
+//' 
+//' Summarizes the sequences in a dbmart
+//' @name sequenceAndSummarize
+//' @returns The summary as data frame.
+//' @param  df_dbMart The data frame that stores the data mart.
+//' @param outputDir The path as string to the directory where the sequences should be stored.
+//' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
+//' @param numOfThreads The number of threads that should be used during sequencing.
+//' @param storeSeqDuringCreation  Boolean parameter to control if the duration should be included in the sequence ID during creation, DEFAULT = FALSE.
+//' @param removeSparseSequences  Boolean parameter to control if the sparsity should be applied.
+//' @param sparsityValue          The numeric value for the sparsity. DEFAULT = 0.05.
+//' @param createTemporalBuckets  Boolean flag if the the the sequences should be split up in dynamic buckets. Number of buckets min(4, max_duration(sequence)).
+//' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
+//' @param durationSparsity  Boolean flag to control if sparse sequences should be removed considering the duration periods of a sequence.
+//' @param durationSparsityValue Numeric value.
+//' @param patIdLength Integer, describes the number of digits that are used for the patient number.
+//' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
+//' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
+//' @param includeDurations include duration buckets in the summary
+//' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+// [[Rcpp::export]]
 DataFrame sequenceAndSummarize(DataFrame df_dbMart,
-                               IntegerVector &lowerBucketThreshold,
+                               IntegerVector &lowerBucketThresholds,
                                bool storeSeqDuringCreation = false,
                                bool includeDurations = false,
                                int numOfThreads = 1,
@@ -893,7 +896,7 @@ DataFrame sequenceAndSummarize(DataFrame df_dbMart,
                                                                           numOfThreads);
   
   return summarize(sequences,
-                   as<std::vector<unsigned int>>(lowerBucketThreshold),
+                   as<std::vector<unsigned int>>(lowerBucketThresholds),
                    includeDurations,
                    summaryOnPatientLevel,
                    (unsigned int) numOfThreads);

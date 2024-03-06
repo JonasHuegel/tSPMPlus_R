@@ -253,13 +253,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // sequenceAndSummarize
-DataFrame sequenceAndSummarize(DataFrame df_dbMart, IntegerVector& lowerBucketThreshold, bool storeSeqDuringCreation, bool includeDurations, int numOfThreads, std::string outputDir, std::string outputFilePrefix, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, double durationPeriods, unsigned int daysForCoOoccurence, bool summaryOnPatientLevel);
-RcppExport SEXP _tSPMPlus_sequenceAndSummarize(SEXP df_dbMartSEXP, SEXP lowerBucketThresholdSEXP, SEXP storeSeqDuringCreationSEXP, SEXP includeDurationsSEXP, SEXP numOfThreadsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP, SEXP summaryOnPatientLevelSEXP) {
+DataFrame sequenceAndSummarize(DataFrame df_dbMart, IntegerVector& lowerBucketThresholds, bool storeSeqDuringCreation, bool includeDurations, int numOfThreads, std::string outputDir, std::string outputFilePrefix, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, double durationPeriods, unsigned int daysForCoOoccurence, bool summaryOnPatientLevel);
+RcppExport SEXP _tSPMPlus_sequenceAndSummarize(SEXP df_dbMartSEXP, SEXP lowerBucketThresholdsSEXP, SEXP storeSeqDuringCreationSEXP, SEXP includeDurationsSEXP, SEXP numOfThreadsSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP, SEXP summaryOnPatientLevelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type df_dbMart(df_dbMartSEXP);
-    Rcpp::traits::input_parameter< IntegerVector& >::type lowerBucketThreshold(lowerBucketThresholdSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type lowerBucketThresholds(lowerBucketThresholdsSEXP);
     Rcpp::traits::input_parameter< bool >::type storeSeqDuringCreation(storeSeqDuringCreationSEXP);
     Rcpp::traits::input_parameter< bool >::type includeDurations(includeDurationsSEXP);
     Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
@@ -275,7 +275,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type durationPeriods(durationPeriodsSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type daysForCoOoccurence(daysForCoOoccurenceSEXP);
     Rcpp::traits::input_parameter< bool >::type summaryOnPatientLevel(summaryOnPatientLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(sequenceAndSummarize(df_dbMart, lowerBucketThreshold, storeSeqDuringCreation, includeDurations, numOfThreads, outputDir, outputFilePrefix, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, durationPeriods, daysForCoOoccurence, summaryOnPatientLevel));
+    rcpp_result_gen = Rcpp::wrap(sequenceAndSummarize(df_dbMart, lowerBucketThresholds, storeSeqDuringCreation, includeDurations, numOfThreads, outputDir, outputFilePrefix, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, durationPeriods, daysForCoOoccurence, summaryOnPatientLevel));
     return rcpp_result_gen;
 END_RCPP
 }
