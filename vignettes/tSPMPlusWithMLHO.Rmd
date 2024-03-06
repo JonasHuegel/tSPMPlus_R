@@ -28,8 +28,7 @@ if(!require(mlho)){
   devtools::install_github("hestiri/mlho")
 }
 if(!require(tSPMPlus)){
-#  devtools::install_github("jonashuegel/tSPMPlusR", args="--recursive")
-# while the code is not published install your local package version   
+  devtools::install_github("jonashuegel/tSPMPlus_R", args="--recursive")
 }
 ## load MLHO depenencies
 if(!require(pacman)){

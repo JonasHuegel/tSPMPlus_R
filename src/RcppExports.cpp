@@ -119,6 +119,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getSequencesWithStartPhenx
+DataFrame getSequencesWithStartPhenx(DataFrame& df_dbMart, unsigned int bitShift, unsigned int lengthOfPhenx, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenx, bool includeCorBuckets, std::uint64_t minDuration, bool storeSeqDuringCreation, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, double durationPeriods, unsigned int daysForCoOoccurence, bool returnSummary, bool summaryOnPatientLevel);
+RcppExport SEXP _tSPMPlus_getSequencesWithStartPhenx(SEXP df_dbMartSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxSEXP, SEXP includeCorBucketsSEXP, SEXP minDurationSEXP, SEXP storeSeqDuringCreationSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP, SEXP returnSummarySEXP, SEXP summaryOnPatientLevelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame& >::type df_dbMart(df_dbMartSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type bitShift(bitShiftSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type lengthOfPhenx(lengthOfPhenxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type lowerBucketThresholds(lowerBucketThresholdsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type startPhenx(startPhenxSEXP);
+    Rcpp::traits::input_parameter< bool >::type includeCorBuckets(includeCorBucketsSEXP);
+    Rcpp::traits::input_parameter< std::uint64_t >::type minDuration(minDurationSEXP);
+    Rcpp::traits::input_parameter< bool >::type storeSeqDuringCreation(storeSeqDuringCreationSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputDir(outputDirSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputFilePrefix(outputFilePrefixSEXP);
+    Rcpp::traits::input_parameter< int >::type numOfThreads(numOfThreadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type removeSparseSequences(removeSparseSequencesSEXP);
+    Rcpp::traits::input_parameter< double >::type sparsityValue(sparsityValueSEXP);
+    Rcpp::traits::input_parameter< bool >::type createTemporalBuckets(createTemporalBucketsSEXP);
+    Rcpp::traits::input_parameter< bool >::type durationSparsity(durationSparsitySEXP);
+    Rcpp::traits::input_parameter< double >::type durationSparsityValue(durationSparsityValueSEXP);
+    Rcpp::traits::input_parameter< bool >::type removeSparseTemporalBuckets(removeSparseTemporalBucketsSEXP);
+    Rcpp::traits::input_parameter< int >::type patIdLength(patIdLengthSEXP);
+    Rcpp::traits::input_parameter< bool >::type returnDuration(returnDurationSEXP);
+    Rcpp::traits::input_parameter< double >::type durationPeriods(durationPeriodsSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type daysForCoOoccurence(daysForCoOoccurenceSEXP);
+    Rcpp::traits::input_parameter< bool >::type returnSummary(returnSummarySEXP);
+    Rcpp::traits::input_parameter< bool >::type summaryOnPatientLevel(summaryOnPatientLevelSEXP);
+    rcpp_result_gen = Rcpp::wrap(getSequencesWithStartPhenx(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getCandidateSequencesForPOI
 DataFrame getCandidateSequencesForPOI(DataFrame& df_dbMart, std::uint64_t minDuration, unsigned int bitShift, unsigned int lengthOfPhenx, IntegerVector& lowerBucketThresholds, IntegerVector& startPhenxOfInterest, bool storeSeqDuringCreation, std::string outputDir, std::string outputFilePrefix, int numOfThreads, bool removeSparseSequences, double sparsityValue, bool createTemporalBuckets, bool durationSparsity, double durationSparsityValue, bool removeSparseTemporalBuckets, int patIdLength, bool returnDuration, double durationPeriods, unsigned int daysForCoOoccurence);
 RcppExport SEXP _tSPMPlus_getCandidateSequencesForPOI(SEXP df_dbMartSEXP, SEXP minDurationSEXP, SEXP bitShiftSEXP, SEXP lengthOfPhenxSEXP, SEXP lowerBucketThresholdsSEXP, SEXP startPhenxOfInterestSEXP, SEXP storeSeqDuringCreationSEXP, SEXP outputDirSEXP, SEXP outputFilePrefixSEXP, SEXP numOfThreadsSEXP, SEXP removeSparseSequencesSEXP, SEXP sparsityValueSEXP, SEXP createTemporalBucketsSEXP, SEXP durationSparsitySEXP, SEXP durationSparsityValueSEXP, SEXP removeSparseTemporalBucketsSEXP, SEXP patIdLengthSEXP, SEXP returnDurationSEXP, SEXP durationPeriodsSEXP, SEXP daysForCoOoccurenceSEXP) {
@@ -220,6 +253,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tSPMPlus_extractNonSparseSequences", (DL_FUNC) &_tSPMPlus_extractNonSparseSequences, 9},
     {"_tSPMPlus_extractAllTransiviteSequences", (DL_FUNC) &_tSPMPlus_extractAllTransiviteSequences, 8},
     {"_tSPMPlus_getSequencesWithEndPhenx", (DL_FUNC) &_tSPMPlus_getSequencesWithEndPhenx, 23},
+    {"_tSPMPlus_getSequencesWithStartPhenx", (DL_FUNC) &_tSPMPlus_getSequencesWithStartPhenx, 23},
     {"_tSPMPlus_getCandidateSequencesForPOI", (DL_FUNC) &_tSPMPlus_getCandidateSequencesForPOI, 20},
     {"_tSPMPlus_getStartPhenxFromSequence", (DL_FUNC) &_tSPMPlus_getStartPhenxFromSequence, 2},
     {"_tSPMPlus_getEndPhenxFromSequence", (DL_FUNC) &_tSPMPlus_getEndPhenxFromSequence, 2},

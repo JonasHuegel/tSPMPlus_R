@@ -1,8 +1,8 @@
 Package: tSPMPlus
 Type: Package
 Title: transitive Sequence Pattern Mining for EHR records 
-Version: 0.03.008
-Date: 2023-06-11
+Version: 0.03.009
+Date: 2024-03-06
 Author: Jonas Huegel, Hossein Estiri
 Maintainer: Jonas Huegel <jonas.huegel@med.uni-goettingen.de>
 Description: R package with C++ backend for fast, low memory consuming creation
