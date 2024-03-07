@@ -9,6 +9,14 @@
 #' @param  df_dbMart The dataframe that stores the numeric data mart.
 NULL
 
+#' Transforms the C++ representation used to store the sequences into R
+#' 
+#' Function to transform a vector of the C++ representation used to store the sequences into an R dataframe.
+#' @name transformToDefaultDataFrame
+#' @param sequences std::vector of the sequences that should be transformed into a R dataframe
+#' @param returnDuration Boolean, if the duration should be included into the returned dataframe
+NULL
+
 #' summarize
 #'
 #' Function to summarize a set of sequences and  returing a R data frame that contains the summary.
@@ -127,9 +135,10 @@ extractAllTransiviteSequences <- function(df_dbMart, storeSeqDuringCreation = FA
 #' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 #' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
 #' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+#' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 #' @export
-getSequencesWithEndPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, endPhenx, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE) {
-    .Call(`_tSPMPlus_getSequencesWithEndPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, endPhenx, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel)
+getSequencesWithEndPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, endPhenx, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE, returnCandidateDataFrame = TRUE) {
+    .Call(`_tSPMPlus_getSequencesWithEndPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, endPhenx, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel, returnCandidateDataFrame)
 }
 
 #' Get Sequences With Specific Start Phenx
@@ -159,9 +168,10 @@ getSequencesWithEndPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBu
 #' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
 #' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 #' @param summarize Boolean, if return a summary of the sequences instead of the sequences
+#' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 #' @export
-getSequencesWithStartPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE) {
-    .Call(`_tSPMPlus_getSequencesWithStartPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel)
+getSequencesWithStartPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE, returnCandidateDataFrame = TRUE) {
+    .Call(`_tSPMPlus_getSequencesWithStartPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel, returnCandidateDataFrame)
 }
 
 #' Get Sequences that start or end with a vector of given phenx
@@ -192,9 +202,10 @@ getSequencesWithStartPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lower
 #' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 #' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
 #' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+#' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 #' @export
-getSequencesContainingPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, phenxOfInterest, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE) {
-    .Call(`_tSPMPlus_getSequencesContainingPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, phenxOfInterest, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel)
+getSequencesContainingPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, phenxOfInterest, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE, returnCandidateDataFrame = FALSE) {
+    .Call(`_tSPMPlus_getSequencesContainingPhenx`, df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, phenxOfInterest, includeCorBuckets, minDuration, storeSeqDuringCreation, outputDir, outputFilePrefix, numOfThreads, removeSparseSequences, sparsityValue, createTemporalBuckets, durationSparsity, durationSparsityValue, removeSparseTemporalBuckets, patIdLength, returnDuration, durationPeriods, daysForCoOoccurence, returnSummary, summaryOnPatientLevel, returnCandidateDataFrame)
 }
 
 #' Get Candidate Sequences For Phenx Of Interest (POI)

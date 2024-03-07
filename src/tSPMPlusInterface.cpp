@@ -36,6 +36,42 @@ std::vector<tspm::dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
 }
 
 
+//' Transforms the C++ representation used to store the sequences into R
+//' 
+//' Function to transform a vector of the C++ representation used to store the sequences into an R dataframe.
+//' @name transformToDefaultDataFrame
+//' @param sequences std::vector of the sequences that should be transformed into a R dataframe
+//' @param returnDuration Boolean, if the duration should be included into the returned dataframe
+DataFrame transformToDefaultDataFrame(std::vector<tspm::temporalSequence> sequences, bool returnDuration){
+ Rcout << "transform sequences from c++ structure in R DataFrame!\n";                                                                      
+ std::vector<std::uint64_t> seqIDs;
+ seqIDs.reserve(sequences.size());
+ std::vector<int> patIDs;
+ patIDs.reserve(sequences.size());
+ std::vector<unsigned int> durations;
+ if(returnDuration){
+   durations.reserve(sequences.size());
+ }
+ 
+ for(tspm::temporalSequence seq: sequences){
+   int patId = seq.patientID;
+   std::int64_t seqId = seq.seqID;
+   unsigned int duration = seq.duration;
+   patIDs.emplace_back(patId);
+   seqIDs.emplace_back(seqId);
+   if(returnDuration){
+     durations.emplace_back(duration);
+   }
+ }
+ DataFrame sequenceDataFrame;
+ if(returnDuration){
+   sequenceDataFrame= DataFrame::create(Named("patient_num") = patIDs, Named("sequence") = seqIDs, Named("duration") = durations);
+ }else{
+   sequenceDataFrame = DataFrame::create(Named("patient_num") = patIDs, Named("sequence") = seqIDs);
+ }
+ return sequenceDataFrame;
+}
+
 //' create all transitive Sequences
 //' 
 //' Function to create all transitive sequences
@@ -207,33 +243,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
   
   Rcout << "created " << sequences.size() << " transitive sequences!\n";
   
-  Rcout << "transform sequences from c++ structure in R DataFrame!\n";                                                                      
-  std::vector<std::uint64_t> seqIDs;
-  seqIDs.reserve(sequences.size());
-  std::vector<int> patIDs;
-  patIDs.reserve(sequences.size());
-  std::vector<unsigned int> durations;
-  if(returnDuration){
-    durations.reserve(sequences.size());
-  }
-  
-  for(tspm::temporalSequence seq: sequences){
-    int patId = seq.patientID;
-    std::int64_t seqId = seq.seqID;
-    unsigned int duration = seq.duration;
-    patIDs.emplace_back(patId);
-    seqIDs.emplace_back(seqId);
-    if(returnDuration){
-      durations.emplace_back(duration);
-    }
-  }
-  DataFrame sequenceDataFrame;
-  if(returnDuration){
-    sequenceDataFrame= DataFrame::create(Named("patient_num") = patIDs, Named("sequence") = seqIDs, Named("duration") = durations);
-  }else{
-    sequenceDataFrame = DataFrame::create(Named("patient_num") = patIDs, Named("sequence") = seqIDs);
-  }
-  return sequenceDataFrame;
+  return transformToDefaultDataFrame(sequences, returnDuration);
 } 
 
 
@@ -447,6 +457,7 @@ DataFrame transformToCandidateDataFrame(std::vector<tspm::temporalSequence> &seq
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 //' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
 //' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+//' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 //' @export
 // [[Rcpp::export]]
 DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
@@ -471,7 +482,8 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    double durationPeriods = 30.437,
                                    unsigned int daysForCoOoccurence = 14,
                                    bool returnSummary = false,
-                                   bool summaryOnPatientLevel = false){
+                                   bool summaryOnPatientLevel = false,
+                                   bool returnCandidateDataFrame = true){
   
   
   if(numOfThreads <= 0){
@@ -510,8 +522,10 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                      returnDuration,
                      summaryOnPatientLevel,
                      (unsigned int) numOfThreads);
-  }else{
+  }else if(returnCandidateDataFrame){
    return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+  } else {
+    return transformToDefaultDataFrame(sequences, returnDuration);
   }
 
 }
@@ -545,6 +559,7 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
 //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 //' @param summarize Boolean, if return a summary of the sequences instead of the sequences
+//' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 //' @export
 // [[Rcpp::export]]
 DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
@@ -569,7 +584,8 @@ DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
                                   double durationPeriods = 30.437,
                                   unsigned int daysForCoOoccurence = 14,
                                   bool returnSummary = false,
-                                  bool summaryOnPatientLevel = false){
+                                  bool summaryOnPatientLevel = false,
+                                  bool returnCandidateDataFrame = true){
  
  
  if(numOfThreads <= 0){
@@ -608,8 +624,10 @@ DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
                     returnDuration,
                     summaryOnPatientLevel,
                     (unsigned int) numOfThreads);
- }else{
+ }else if(returnCandidateDataFrame){
    return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+ }else{
+   return transformToDefaultDataFrame(sequences, returnDuration);
  }
  
 }
@@ -642,6 +660,7 @@ DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 //' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
 //' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+//' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 //' @export
 // [[Rcpp::export]]
 DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
@@ -666,7 +685,8 @@ DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
                                     double durationPeriods = 30.437,
                                     unsigned int daysForCoOoccurence = 14,
                                     bool returnSummary = false,
-                                    bool summaryOnPatientLevel = false){
+                                    bool summaryOnPatientLevel = false,
+                                    bool returnCandidateDataFrame = false){
  
  
  if(numOfThreads <= 0){
@@ -696,8 +716,8 @@ DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
  ips4o::parallel::sort(sequences.begin(), sequences.end(),tspm::timedSequencesSorter, numOfThreads);
  std::set<unsigned int > phenxSet;
  phenxSet.insert(phenxOfInterest.begin(), phenxOfInterest.end());
- sequences = tspm::extractSequencesWithSpecificStart(sequences, minDuration, bitShift, lengthOfPhenx, phenxSet, numOfThreads);
- Rcout<< sequences.size() << std::endl;
+ sequences = tspm::extractSequencesWithPhenx(sequences, minDuration, bitShift, lengthOfPhenx, phenxSet, numOfThreads);
+ Rcout<< "Reduced to" << sequences.size() << "containing a phenx of interest" << std::endl;
  Rcout.flush();
  if(returnSummary){
    return summarize(sequences,
@@ -705,8 +725,10 @@ DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
                     returnDuration,
                     summaryOnPatientLevel,
                     (unsigned int) numOfThreads);
- }else{
+ }else if(returnCandidateDataFrame){
    return transformToCandidateDataFrame(sequences, as< std::vector<unsigned int> >(lowerBucketThresholds), lengthOfPhenx);
+ }else{
+   return transformToDefaultDataFrame(sequences, returnDuration);
  }
  
 }

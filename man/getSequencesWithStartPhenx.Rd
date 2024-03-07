@@ -27,7 +27,8 @@ getSequencesWithStartPhenx(
   durationPeriods = 30.437,
   daysForCoOoccurence = 14L,
   returnSummary = FALSE,
-  summaryOnPatientLevel = FALSE
+  summaryOnPatientLevel = FALSE,
+  returnCandidateDataFrame = TRUE
 )
 }
 \arguments{
@@ -72,6 +73,8 @@ getSequencesWithStartPhenx(
 \item{durationPeriods}{Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years.}
 
 \item{daysForCoOoccurence}{Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).}
+
+\item{returnCandidateDataFrame}{Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned}
 
 \item{summarize}{Boolean, if return a summary of the sequences instead of the sequences}
 }

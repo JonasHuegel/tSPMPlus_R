@@ -27,7 +27,8 @@ getSequencesContainingPhenx(
   durationPeriods = 30.437,
   daysForCoOoccurence = 14L,
   returnSummary = FALSE,
-  summaryOnPatientLevel = FALSE
+  summaryOnPatientLevel = FALSE,
+  returnCandidateDataFrame = FALSE
 )
 }
 \arguments{
@@ -76,6 +77,8 @@ getSequencesContainingPhenx(
 \item{returnSummary}{Boolean, if return a summary of the sequences instead of the sequences}
 
 \item{summaryOnPatientLevel}{bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level}
+
+\item{returnCandidateDataFrame}{Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned}
 }
 \value{
 The sequences as data frame.
