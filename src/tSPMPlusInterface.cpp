@@ -46,6 +46,7 @@ std::vector<tspm::dbMartEntry> transformDataFrameToStruct(DataFrame &dfDbMart){
 //' @param outputDir The path as string to the directory where the sequences should be stored.
 //' @param outputFilePrefix The string file prefix for the patient files storing the sequences.
 //' @param numOfThreads The number of threads that should be used during sequencing.
+//' @export
 // [[Rcpp::export]]
 size_t createTransitiveSequences(DataFrame &df_dbMart,
                                  std::string outputDir, 
@@ -163,6 +164,7 @@ DataFrame summarize(std::vector<tspm::temporalSequence> &sequences,
 //' @param returnDuration Boolean, controls if the data frame that is returns contains. 
 //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
 //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @export
 // [[Rcpp::export]]
 DataFrame tSPMPlus(DataFrame &df_dbMart,
              bool storeSeqDuringCreation = false,
@@ -250,6 +252,7 @@ DataFrame tSPMPlus(DataFrame &df_dbMart,
 //' @param returnDuration Boolean, controls if the data frame that is returns contains.
 //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, eg. 30.471 for months, 364.25 for years. 
 //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @export
 // [[Rcpp::export]]
 DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
                                       bool storeSeqDuringCreation = false,
@@ -297,6 +300,7 @@ DataFrame extractNonSparseSequences(DataFrame &df_dbMart,
 //' @param returnDuration Boolean, controls if the data frame that is returns contains.
 //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
 //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @export
 // [[Rcpp::export]]
 DataFrame extractAllTransiviteSequences(DataFrame &df_dbMart,
                                     bool storeSeqDuringCreation = false,
@@ -443,6 +447,7 @@ DataFrame transformToCandidateDataFrame(std::vector<tspm::temporalSequence> &seq
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 //' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
 //' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+//' @export
 // [[Rcpp::export]]
 DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
                                    unsigned int bitShift,
@@ -540,6 +545,7 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
 //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 //' @param summarize Boolean, if return a summary of the sequences instead of the sequences
+//' @export
 // [[Rcpp::export]]
 DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
                                   unsigned int bitShift,
@@ -636,6 +642,7 @@ DataFrame getSequencesWithStartPhenx(DataFrame &df_dbMart,
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
 //' @param returnSummary Boolean, if return a summary of the sequences instead of the sequences
 //' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+//' @export
 // [[Rcpp::export]]
 DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
                                     unsigned int bitShift,
@@ -731,6 +738,7 @@ DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
 //' @param returnDuration Boolean, controls if the data frame that is returns contains.
 //' @param durationPeriods Numeric, Upper threshold, stores the number of day in the time period, e.g. 30.471 for months, 364.25 for years. 
 //' @param daysForCoOoccurence Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).
+//' @export
 // [[Rcpp::export]]
 DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
                                        std::uint64_t minDuration,
@@ -804,6 +812,7 @@ DataFrame getCandidateSequencesForPOI(DataFrame &df_dbMart,
 //' @returns The startPhenx of a sequence
 //' @param  sequence  Integer.
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
+//' @export
 // [[Rcpp::export]]
 unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLength = 7){
   return tspm::getStartPhenx(sequence, phenxLength);
@@ -816,6 +825,7 @@ unsigned int getStartPhenxFromSequence(std::uint64_t sequence, unsigned int phen
 //' @returns The endPhenx of a sequence.
 //' @param  sequence  Integer.
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
+//' @export
 // [[Rcpp::export]]
 unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxLength = 7){
   return tspm::getEndPhenx(sequence, phenxLength); 
@@ -830,6 +840,7 @@ unsigned int getEndPhenxFromSequence(std::uint64_t sequence, unsigned int phenxL
 //' @param  firstPhenx  Integer.
 //' @param  secondPhenx  Integer.
 //' @param phenxLength Integer, number of digits used to represent the second phenx in the sequence.
+//' @export
 // [[Rcpp::export]]
 std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, unsigned int phenxLength = 7){
   return tspm::createSequence(firstPhenx, secondPhenx, phenxLength);
@@ -858,6 +869,7 @@ std::uint64_t createSequence(unsigned int firstPhenx, unsigned int secondPhenx, 
 //' @param lowerBucketThresholds IntegerVector, lower duration Thresholds for the duration buckets of the candidate sequences
 //' @param includeDurations include duration buckets in the summary
 //' @param summaryOnPatientLevel bool, that defines if the summary should be on the patient level (counting occurrences for each patient) or on the dbMart level
+//' @export
 // [[Rcpp::export]]
 DataFrame sequenceAndSummarize(DataFrame df_dbMart,
                                IntegerVector &lowerBucketThresholds,
