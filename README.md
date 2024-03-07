@@ -27,7 +27,7 @@ This R packages is tested  on Linux and Windows. It should also compile on macOS
 * devtools
 
 ## Installation
-This package wraps the tSPM+ C++ library, which is included as a git submodule. Therefore, it is required to add the `--recursive` argumente when installing the package.
+This package wraps the tSPM+ C++ library, which is included as a git submodule. Adding the `--recursive` argumente when installing the package is not anymore required.
 Install in R with:
 `devtools::install_github("jonashuegel/tSPMPlus_R")`
 
