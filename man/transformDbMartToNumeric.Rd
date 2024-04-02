@@ -4,10 +4,12 @@
 \alias{transformDbMartToNumeric}
 \title{Transforms an alphanumeric data frame to a numeric one}
 \usage{
-transformDbMartToNumeric(dbmart)
+transformDbMartToNumeric(dbmart, originalPhenxLookUP)
 }
 \arguments{
 \item{dbmart}{The alpha numeric dbmart that should be converted.}
+
+\item{originalPhenxLookUP}{The dataframe containing a subset of the phenx and their numeric representations, which should be also assigned to the phenx in this dbmart, Optional}
 }
 \value{
 A list of data frames containing the numeric datamart and the patient id and phenx look up tables.

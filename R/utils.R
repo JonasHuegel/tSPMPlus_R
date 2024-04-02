@@ -1,40 +1,44 @@
-utils::globalVariables(c("num_pat_num","%>%","num_Phenx", "start_date"))
+utils::globalVariables(c("num_pat_num","num_Phenx", "start_date"))
 
 #'@title Transforms an alphanumeric data frame to a numeric one
-#'@description Transforms an alphanumeric data frame to a numeric one and returns it together with the look up tables for the patient id and phenx. 
+#'@description Transforms an alphanumeric data frame to a numeric one and returns it together with the look up tables for the patient id and phenx.
 #'@param dbmart The alpha numeric dbmart that should be converted.
+#'@param originalPhenxLookUP The dataframe containing a subset of the phenx and their numeric representations, which should be also assigned to the phenx in this dbmart, Optional
 #'@returns A list of data frames containing the numeric datamart and the patient id and phenx look up tables.
 #'
-transformDbMartToNumeric<- function(dbmart){
-  
+transformDbMartToNumeric<- function(dbmart, originalPhenxLookUP){
+  `%>%` <- magrittr::`%>%`
   patient_num <- c(unique(dbmart$patient_num))
-  
   patLookUp <- as.data.frame(patient_num)
-  
   setDT(patLookUp)
-  
   patLookUp[,num_pat_num := .I]
   patLookUp <- patLookUp %>% dplyr::mutate(num_pat_num = num_pat_num -1)
-  
   dbmart_num <- dbmart %>% dplyr::left_join(patLookUp, by="patient_num")
   
+    
   phenx <- c(unique(dbmart$phenx))
-  
   phenxLookUp <- as.data.frame(phenx)
-  
   setDT(phenxLookUp)
   
-  phenxLookUp[,num_Phenx := .I]
+  if(!missing(originalPhenxLookUP)){
+    print("Found original PhenxLookUp table, using the numeric representation for phenx stored in the original lookUp.")
+    print("CAUTION: This might resolve in gaps between the assigned numeric values, if the original lookup contains phenx that are not in the current dbmart.")
+    originalPhenx <- subset(originalPhenxLookUP, originalPhenxLookUP$phenx %in% phenxLookUp$phenx)
+    largestPhenx <- max(originalPhenxLookUP$num_Phenx)
+    phenxLookUp <- subset(phenxLookUp,!(phenxLookUp$phenx %in% originalPhenx$phenx))
+    phenxLookUp[,num_Phenx := .I + largestPhenx]
+    phenxLookUp <- rbind(originalPhenx,phenxLookUp)
+  }else{
+    phenxLookUp[,num_Phenx := .I]
+  }
+
   
   dbmart_num <- dbmart_num %>% dplyr::left_join(phenxLookUp, by="phenx")
-  
   dbmart_num <- dbmart_num %>% dplyr::select(num_pat_num, num_Phenx, start_date)
-  
   dbmart_num <- dbmart_num[order(dbmart_num$num_pat_num,dbmart_num$start_date),]
-  
   rownames(dbmart_num) = seq(length=nrow(dbmart_num))
-  
   dbmart_num$start_date <- as.Date(dbmart_num$start_date)
+  
   
   out <- list()
   out$patientLookUp <- patLookUp
@@ -53,6 +57,7 @@ transformDbMartToNumeric<- function(dbmart){
 #'@returns A list of 2 list. The first list contains the dbmart chunks, the second one contains the look up tables to translate the chunk-patnum to one from the orignal dbmart.
 #'
 splitdbMartInChunks <-function(dbmart_num, includeCorSeq = FALSE, buffer = 10000000){
+  `%>%` <- magrittr::`%>%`
   uniquePatients <-unique(dbmart_num$num_pat_num)
   entriesPerPatient <- count(dbmart_num$num_pat_num)
   dbmartEntrySizeInCPP <- 16
