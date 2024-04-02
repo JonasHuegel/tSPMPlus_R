@@ -717,7 +717,7 @@ DataFrame getSequencesContainingPhenx(DataFrame &df_dbMart,
  std::set<unsigned int > phenxSet;
  phenxSet.insert(phenxOfInterest.begin(), phenxOfInterest.end());
  sequences = tspm::extractSequencesWithPhenx(sequences, minDuration, bitShift, lengthOfPhenx, phenxSet, numOfThreads);
- Rcout<< "Reduced to" << sequences.size() << "containing a phenx of interest" << std::endl;
+ Rcout<< "Reduced to " << sequences.size() << " containing a phenx of interest" << std::endl;
  Rcout.flush();
  if(returnSummary){
    return summarize(sequences,
