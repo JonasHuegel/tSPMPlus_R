@@ -31,11 +31,19 @@ This package wraps the tSPM+ C++ library, which is included as a git submodule. 
 Install in R with:
 `devtools::install_github("jonashuegel/tSPMPlus_R")`
 
+
 ## Usage
 You can find two vignettes with example use cases in the vignette folder.
 
 ## Citation
 Please cite our publication when using the package: Hügel, J., Sax, U., Murphy, S. N. & Estiri, H. tSPM+; a high-performance algorithm for mining transitive sequential patterns from clinical data. arXiv [cs.LG] (2023) doi:10.48550/arXiv.2309.05671
+
+## Related GitHub Repos:
+* [R package](https://github.com/JonasHuegel/tSPMPlus_benchmarks)
+* [C++ library](https://github.com/JonasHuegel/tspm_cpp_backend)
+* [Docker Container](https://github.com/JonasHuegel/tSPMPlusDocker)
+* [Bemchmark Scripts used in the publication](https://github.com/JonasHuegel/tSPMPlus_benchmarks)
+
 
 ## License
 This work is under the MIT License.
