@@ -142,7 +142,7 @@ dat.train[,row := .I]
 dat.train$value.var <- 1
 uniqpats.train <- c(as.character(unique(dat.train$patient_num)))
 ##here is the application of MSMR.lite
-dat.train <- MSMSR.lite(MLHO.dat=dat.train,
+dat.train <- MSMR.lite(MLHO.dat=dat.train,
                         patients = uniqpats.train,
                         sparsity = NA, 
                         labels = labeldt,
@@ -160,7 +160,7 @@ setDT(dat.test)
 dat.test[,row := .I]
 dat.test$value.var <- 1
 uniqpats.test <- c(as.character(unique(dat.test$patient_num)))
-dat.test <- MSMSR.lite(MLHO.dat=dat.test,patients = uniqpats.test,sparsity=NA,jmi = FALSE,labels = labeldt)
+dat.test <- MSMR.lite(MLHO.dat=dat.test,patients = uniqpats.test,sparsity=NA,jmi = FALSE,labels = labeldt)
 ```
 
 Here notice that we only used `MSMR.lite` to generate the wide table that matches to the `dat.train` table.
