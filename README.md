@@ -15,7 +15,7 @@ This R packages is tested  on Linux and Windows. It should also compile on macOS
 * R 4.2.1+
 * R-tools (windows only) version corresponding to R
 * openMP
-* C++ compiler supporting C++17 and openMP (we recommend gcc
+* C++ compiler supporting C++17 and openMP (we recommend gcc)
 
 #### R-packages depencies
 * RcppParallel
@@ -38,4 +38,4 @@ You can find two vignettes with example use cases in the vignette folder.
 Please cite our publication when using the package: Hügel, J., Sax, U., Murphy, S. N. & Estiri, H. tSPM+; a high-performance algorithm for mining transitive sequential patterns from clinical data. arXiv [cs.LG] (2023) doi:10.48550/arXiv.2309.05671
 
 ## License
-This work is under the MIT License.
+This work is lincensed under the MIT License.
