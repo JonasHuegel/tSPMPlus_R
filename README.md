@@ -34,6 +34,9 @@ Install in R with:
 ## Usage
 You can find two vignettes with example use cases in the vignette folder.
 
+## Docker Image
+A Docker image with am pre-installed RStudio Sever and tSPM+ is [available](https://github.com/JonasHuegel/tSPMPlusDocker).
+
 ## Citation
 Please cite our publication when using the package: Hügel, J., Sax, U., Murphy, S. N. & Estiri, H. tSPM+; a high-performance algorithm for mining transitive sequential patterns from clinical data. arXiv [cs.LG] (2023) doi:10.48550/arXiv.2309.05671
 
