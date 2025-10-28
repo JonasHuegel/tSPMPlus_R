@@ -167,7 +167,8 @@ getSequencesWithEndPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBu
 #' @param durationSparsityValue Numeric value.
 #' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
 #' @param patIdLength Integer, describes the number of digits that are used for the patient number.
-#' @param summarize Boolean, if return a summary of the sequences instead of the sequences
+#' @param returnSummary Boolean, if true return a summary of the sequences instead of the sequences.
+#' @param summaryOnPatientLevel Boolean, if true, handed over to summarize function 
 #' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 #' @export
 getSequencesWithStartPhenx <- function(df_dbMart, bitShift, lengthOfPhenx, lowerBucketThresholds, startPhenx, includeCorBuckets = FALSE, minDuration = 0L, storeSeqDuringCreation = FALSE, outputDir = "", outputFilePrefix = "", numOfThreads = 1L, removeSparseSequences = TRUE, sparsityValue = 0.05, createTemporalBuckets = FALSE, durationSparsity = FALSE, durationSparsityValue = 0, removeSparseTemporalBuckets = FALSE, patIdLength = 7L, returnDuration = TRUE, durationPeriods = 30.437, daysForCoOoccurence = 14L, returnSummary = FALSE, summaryOnPatientLevel = FALSE, returnCandidateDataFrame = TRUE) {

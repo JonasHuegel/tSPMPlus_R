@@ -74,9 +74,11 @@ getSequencesWithStartPhenx(
 
 \item{daysForCoOoccurence}{Integer, sets the upper threshold for the sequence duration so that they are counted as co-occurrence (meaning a duration of 0).}
 
-\item{returnCandidateDataFrame}{Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned}
+\item{returnSummary}{Boolean, if true return a summary of the sequences instead of the sequences.}
 
-\item{summarize}{Boolean, if return a summary of the sequences instead of the sequences}
+\item{summaryOnPatientLevel}{Boolean, if true, handed over to summarize function}
+
+\item{returnCandidateDataFrame}{Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned}
 }
 \value{
 The sequences as data frame.

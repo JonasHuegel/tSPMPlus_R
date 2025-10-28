@@ -1,4 +1,7 @@
+// [[Rcpp::depends(Rcpp,RcppEigen)]]
 #include <Rcpp.h>
+#include <RcppEigen.h>
+#include <cstdint>
 #include "tspm_cpp_backend/utils/sequencing.cpp"
 #include "tspm_cpp_backend/utils/utils.cpp"
 #include "tspm_cpp_backend/utils/sorter.cpp"
@@ -7,6 +10,7 @@
 
 
 using namespace Rcpp;
+
 
 
 //' transform the dbmart data frame to c++ structure
@@ -558,7 +562,8 @@ DataFrame getSequencesWithEndPhenx(DataFrame &df_dbMart,
 //' @param durationSparsityValue Numeric value.
 //' @param removeSparseTemporalBuckets Boolean, to control if the sparsity should be applied on the dynamic temporal buckets.
 //' @param patIdLength Integer, describes the number of digits that are used for the patient number.
-//' @param summarize Boolean, if return a summary of the sequences instead of the sequences
+//' @param returnSummary Boolean, if true return a summary of the sequences instead of the sequences.
+//' @param summaryOnPatientLevel Boolean, if true, handed over to summarize function 
 //' @param returnCandidateDataFrame Boolean to controll is a candidate dataframe should be returned, if returnSummary and returnCandidateDataFrame are both false the default sequence dataframe is returned
 //' @export
 // [[Rcpp::export]]
